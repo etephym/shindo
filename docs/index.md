@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: "Shindo Life Docs | ETEPHYM"
-  text: "etephym"
+  name: "Shindo Life Docs"
+  text: "ETEPHYM"
   tagline: My great project tagline
   actions:
     - theme: brand
