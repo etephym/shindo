@@ -211,6 +211,7 @@ html { scroll-behavior: smooth; }
 
 /* =============================================================
    Heading highlight on sidebar anchor click — smooth fade
+   Both h2 and h3 are covered
    ============================================================= */
 .vp-doc .heading-highlighted {
   border-left:   3px solid transparent;
@@ -221,7 +222,62 @@ html { scroll-behavior: smooth; }
 }
 
 @keyframes heading-flash {
-  0%   { background: rgba(84, 160, 255, 0.25); border-left-color: rgba(84, 160, 255, 1.00); box-shadow: 0 0 20px rgba(84, 160, 255, 0.15); }
-  30%  { background: rgba(84, 160, 255, 0.18); border-left-color: rgba(84, 160, 255, 0.80); box-shadow: 0 0 14px rgba(84, 160, 255, 0.10); }
+  0%   { background: rgba(84, 160, 255, 0.22); border-left-color: rgba(84, 160, 255, 1.00); box-shadow: 0 0 20px rgba(84, 160, 255, 0.12); }
+  35%  { background: rgba(84, 160, 255, 0.14); border-left-color: rgba(84, 160, 255, 0.70); box-shadow: 0 0 12px rgba(84, 160, 255, 0.08); }
   100% { background: rgba(84, 160, 255, 0.00); border-left-color: rgba(84, 160, 255, 0.00); box-shadow: none; }
+}
+
+
+/* =============================================================
+   H2 headings — subtle left accent line (always visible)
+   Gives same "card" feel as h3 inside VitePress default theme
+   ============================================================= */
+.vp-doc h2 {
+  border-left:  3px solid rgba(84, 160, 255, 0.25);
+  padding-left: 12px;
+  margin-left:  -15px;
+}
+
+
+/* =============================================================
+   Tables — glass card style
+   ============================================================= */
+.dark .vp-doc table {
+  background:    rgba(255, 255, 255, 0.02);
+  border:        1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow:      hidden;
+}
+
+.dark .vp-doc tr:nth-child(even) { background: rgba(255, 255, 255, 0.03); }
+.dark .vp-doc th                 { background: rgba(84, 160, 255, 0.08); color: #a8c8ff; }
+.dark .vp-doc td,
+.dark .vp-doc th                 { border-color: rgba(255, 255, 255, 0.06); }
+
+
+/* =============================================================
+   Custom blocks (tip/warning/danger/info) — glass style
+   ============================================================= */
+.dark .vp-doc .custom-block {
+  background:    rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+
+/* =============================================================
+   Sidebar items — subtle hover glow
+   ============================================================= */
+.dark .VPSidebarItem .item:hover {
+  color:       #a8c8ff !important;
+  text-shadow: 0 0 8px rgba(84, 160, 255, 0.4);
+  transition:  color 0.2s, text-shadow 0.2s;
+}
+
+
+/* =============================================================
+   Active sidebar item — blue glow accent
+   ============================================================= */
+.dark .VPSidebarItem.is-active > .item {
+  text-shadow: 0 0 10px rgba(84, 160, 255, 0.5);
 }
