@@ -14,7 +14,7 @@ function calculate() {
     const words = text.trim().split(/\s+/).filter(Boolean).length
     wordCount.value = words
     readingTime.value = Math.ceil(words / 200)
-  }, 100)
+  }, 150)
 }
 
 onMounted(calculate)
@@ -23,25 +23,35 @@ watch(() => route.path, calculate)
 
 <template>
   <div class="reading-meta" v-if="wordCount > 0">
-    <span>📖 {{ wordCount }} слов</span>
+    <span class="meta-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      {{ wordCount }} слов
+    </span>
     <span class="sep">·</span>
-    <span>⏱ {{ readingTime }} мин чтения</span>
+    <span class="meta-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {{ readingTime }} мин чтения
+    </span>
   </div>
 </template>
 
 <style scoped>
 .reading-meta {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
   color: var(--vp-c-text-2);
-  margin-bottom: 24px;
-  padding: 8px 14px;
+  margin-bottom: 20px;
+  padding: 6px 14px;
   background: var(--vp-c-bg-soft);
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
-  width: fit-content;
 }
-.sep { opacity: 0.4; }
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sep { opacity: 0.3; }
 </style>

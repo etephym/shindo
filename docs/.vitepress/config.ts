@@ -22,10 +22,7 @@ export default defineConfig({
   ],
 
   sitemap: { hostname: 'https://etephym.github.io/shindo/' },
-
-  markdown: {
-    lineNumbers: true,
-  },
+  markdown: { lineNumbers: true },
 
   themeConfig: {
     logo: '/logo.jpg',
@@ -43,9 +40,9 @@ export default defineConfig({
       {
         text: '🔗 Ссылки',
         items: [
-          { text: 'GitHub', link: 'https://github.com/etephym/shindo' },
           { text: 'Discord', link: 'https://discord.gg/cmCpgkb5zq' },
           { text: 'Telegram', link: 'https://t.me/etephym' },
+          { text: 'GitHub', link: 'https://github.com/etephym/shindo' },
         ]
       }
     ],
@@ -54,8 +51,16 @@ export default defineConfig({
       {
         text: '📚 Страницы',
         items: [
-          { text: '📖 Guide', link: '/guide' },
-          { text: '💡 Tips & Tricks', link: '/tips' },
+          {
+            text: 'Guide',
+            link: '/guide',
+            badge: { type: 'tip', text: 'Читать' }
+          },
+          {
+            text: 'Tips & Tricks',
+            link: '/tips',
+            badge: { type: 'warning', text: 'Важно' }
+          },
         ]
       },
       {
@@ -63,7 +68,11 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Пассивки менторов', link: '/guide#пассивки-менторов' },
-          { text: 'Менторы', link: '/guide#менторы' },
+          {
+            text: 'Менторы',
+            link: '/guide#менторы',
+            badge: { type: 'tip', text: 'Must Read' }
+          },
           { text: 'Rep Bonus', link: '/guide#rep-bonus-stats' },
           { text: 'Danger', link: '/guide#danger' },
           { text: 'Расы', link: '/guide#расы' },
@@ -84,8 +93,16 @@ export default defineConfig({
         text: '🧪 Скиллы',
         collapsed: true,
         items: [
-          { text: 'Elements', link: '/guide#elements' },
-          { text: 'Kenjutsu', link: '/guide#kenjutsu' },
+          {
+            text: 'Elements',
+            link: '/guide#elements',
+            badge: { type: 'danger', text: 'S+' }
+          },
+          {
+            text: 'Kenjutsu',
+            link: '/guide#kenjutsu',
+            badge: { type: 'danger', text: 'S+' }
+          },
           { text: 'Sub Abilities', link: '/guide#sub-abilities' },
           { text: 'Sub Modes', link: '/guide#sub-modes' },
         ]
@@ -94,9 +111,17 @@ export default defineConfig({
         text: '📋 Прочее',
         collapsed: true,
         items: [
-          { text: 'Термины', link: '/guide#термины' },
+          {
+            text: 'Термины',
+            link: '/guide#термины',
+            badge: { type: 'tip', text: 'Новичкам' }
+          },
           { text: 'Shindo Rules', link: '/guide#shindo-rules' },
-          { text: 'Баг слотов', link: '/guide#баг-слотов' },
+          {
+            text: 'Баг слотов',
+            link: '/guide#баг-слотов',
+            badge: { type: 'warning', text: 'Важно' }
+          },
         ]
       }
     ],
@@ -112,7 +137,7 @@ export default defineConfig({
             displayDetails: 'Подробный список',
             resetButtonTitle: 'Сбросить',
             backButtonTitle: 'Назад',
-            noResultsText: 'Нет результатов по запросу',
+            noResultsText: 'Нет результатов',
             footer: {
               selectText: 'Выбрать',
               navigateText: 'Навигация',
@@ -123,11 +148,7 @@ export default defineConfig({
       }
     },
 
-    docFooter: {
-      prev: '← Предыдущая',
-      next: 'Следующая →'
-    },
-
+    docFooter: { prev: '← Предыдущая', next: 'Следующая →' },
     externalLinkIcon: true,
     returnToTopLabel: '↑ Наверх',
     sidebarMenuLabel: 'Меню',
