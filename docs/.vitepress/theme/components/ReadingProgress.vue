@@ -1,62 +1,157 @@
 <script setup lang="ts">
-// Tracks scroll position and shows reading progress in bottom-right corner
+// Reading progress circle with scroll-to-top button
+// - Circle stroke fills as you scroll down the page
+// - After 3s of no scrolling the icon switches to an arrow (scroll to top)
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const progress = ref(0)
 const visible  = ref(false)
+const idle     = ref(false)
+
+const SIZE   = 48
+const RADIUS = 20
+const CIRCUM = 2 * Math.PI * RADIUS
+
+let idleTimer: ReturnType<typeof setTimeout> | null = null
 
 function update() {
-  const doc    = document.documentElement
-  const total  = doc.scrollHeight - doc.clientHeight
-  const current = window.scrollY
+  const doc   = document.documentElement
+  const total = doc.scrollHeight - doc.clientHeight
 
-  progress.value = total > 0 ? Math.round((current / total) * 100) : 0
-  visible.value  = current > 200
+  progress.value = total > 0 ? Math.round((window.scrollY / total) * 100) : 0
+  visible.value  = window.scrollY > 200
+  idle.value     = false
+
+  if (idleTimer) clearTimeout(idleTimer)
+  idleTimer = setTimeout(() => { idle.value = true }, 3000)
 }
 
-onMounted(()  => window.addEventListener('scroll', update, { passive: true }))
-onUnmounted(() => window.removeEventListener('scroll', update))
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', update, { passive: true })
+  update()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', update)
+  if (idleTimer) clearTimeout(idleTimer)
+})
+
+// SVG arc offset — 0% = full gap, 100% = full circle
+const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
 </script>
 
 <template>
   <Transition name="progress-fade">
-    <div v-if="visible" class="reading-progress">
-      {{ progress }}%
+    <div
+      v-if="visible"
+      class="rp-wrap"
+      :title="idle ? 'Наверх' : `${progress}% прочитано`"
+      @click="scrollToTop"
+    >
+      <!-- SVG progress ring -->
+      <svg :width="SIZE" :height="SIZE" class="rp-ring">
+        <!-- Background track -->
+        <circle
+          :cx="SIZE / 2"
+          :cy="SIZE / 2"
+          :r="RADIUS"
+          fill="none"
+          stroke="rgba(84,160,255,0.12)"
+          stroke-width="2.5"
+        />
+        <!-- Animated progress arc -->
+        <circle
+          :cx="SIZE / 2"
+          :cy="SIZE / 2"
+          :r="RADIUS"
+          fill="none"
+          stroke="#54a0ff"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          :stroke-dasharray="CIRCUM"
+          :stroke-dashoffset="strokeOffset(progress)"
+          transform="rotate(-90, 24, 24)"
+          class="rp-arc"
+        />
+      </svg>
+
+      <!-- Center: % text or arrow icon -->
+      <Transition name="icon-swap" mode="out-in">
+        <span v-if="!idle" key="pct" class="rp-label">{{ progress }}%</span>
+        <span v-else key="arrow" class="rp-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+        </span>
+      </Transition>
     </div>
   </Transition>
 </template>
 
 <style scoped>
-.reading-progress {
-  position:      fixed;
-  bottom:        28px;
-  right:         28px;
-  z-index:       100;
-  width:         48px;
-  height:        48px;
-  display:       flex;
-  align-items:   center;
+.rp-wrap {
+  position:        fixed;
+  bottom:          28px;
+  right:           28px;
+  z-index:         100;
+  width:           48px;
+  height:          48px;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  font-size:     12px;
-  font-weight:   600;
-  color:         #54a0ff;
-  background:    rgba(13, 13, 13, 0.85);
-  border:        1px solid rgba(84, 160, 255, 0.25);
-  border-radius: 50%;
+  cursor:          pointer;
+  background:      rgba(13, 13, 13, 0.85);
+  border-radius:   50%;
   backdrop-filter: blur(8px);
-  box-shadow:    0 0 12px rgba(84, 160, 255, 0.15);
-  cursor:        pointer;
-  transition:    box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow:      0 0 12px rgba(84, 160, 255, 0.12);
+  transition:      box-shadow 0.2s ease;
 }
 
-.reading-progress:hover {
-  border-color: rgba(84, 160, 255, 0.6);
-  box-shadow:   0 0 20px rgba(84, 160, 255, 0.3);
+.rp-wrap:hover {
+  box-shadow: 0 0 22px rgba(84, 160, 255, 0.35);
 }
 
-/* Fade in/out transition */
+/* SVG ring sits on top as absolute overlay */
+.rp-ring {
+  position: absolute;
+  top:      0;
+  left:     0;
+}
+
+.rp-arc {
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+/* Percentage text */
+.rp-label {
+  font-size:   11px;
+  font-weight: 600;
+  color:       #54a0ff;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Arrow icon */
+.rp-arrow {
+  display:     flex;
+  align-items: center;
+  color:       #54a0ff;
+}
+
+/* Swap animation between % and arrow */
+.icon-swap-enter-active,
+.icon-swap-leave-active { transition: opacity 0.25s ease, transform 0.25s ease; }
+.icon-swap-enter-from   { opacity: 0; transform: translateY(4px); }
+.icon-swap-leave-to     { opacity: 0; transform: translateY(-4px); }
+
+/* Widget appear/disappear */
 .progress-fade-enter-active,
-.progress-fade-leave-active { transition: opacity 0.3s ease; }
+.progress-fade-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
 .progress-fade-enter-from,
-.progress-fade-leave-to     { opacity: 0; }
+.progress-fade-leave-to     { opacity: 0; transform: translateY(8px); }
 </style>
