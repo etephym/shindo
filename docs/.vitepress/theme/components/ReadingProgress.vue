@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// Reading progress circle with scroll-to-top button
-// - Circle stroke fills as you scroll down the page
-// - After 3s of no scrolling the icon switches to an arrow (scroll to top)
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const progress = ref(0)
@@ -21,17 +18,21 @@ function update() {
     rafId = null
 
     const doc     = document.documentElement
-    const total   = doc.scrollHeight - doc.clientHeight
     const scrollY = window.scrollY
+    const total   = doc.scrollHeight - doc.clientHeight
 
-    // Force 100% when within 2px of bottom to avoid stuck 99%
-    if (total > 0 && total - scrollY <= 2) {
+    if (total <= 0) {
+      progress.value = 0
+    } else if (scrollY <= 0) {
+      progress.value = 0
+    } else if (scrollY >= total - 1) {
       progress.value = 100
     } else {
-      progress.value = total > 0 ? Math.round((scrollY / total) * 100) : 0
+      // floor instead of round — avoids jumping to 2% at top and 99% at bottom
+      progress.value = Math.floor((scrollY / total) * 100)
     }
 
-    visible.value = scrollY > 200
+    visible.value = scrollY > 100
     idle.value    = false
 
     if (idleTimer) clearTimeout(idleTimer)
