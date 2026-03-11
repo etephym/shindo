@@ -20,6 +20,7 @@
     "doc": "docs"
   },
   "dependencies": {
+    "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.18.2",
     "algoliasearch": "^5.49.2",
     "birpc": "^2.9.0",
     "ccount": "^2.0.1",
@@ -43,6 +44,7 @@
     "magic-string": "^0.30.21",
     "mark.js": "^8.11.1",
     "mdast-util-to-hast": "^13.2.1",
+    "medium-zoom": "^1.1.0",
     "micromark-util-character": "^2.1.1",
     "micromark-util-encode": "^2.0.1",
     "micromark-util-sanitize-uri": "^2.0.1",
