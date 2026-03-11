@@ -35,7 +35,7 @@ html.dark {
 .dark .VPNav {
   border-bottom:   1px solid #1f1f1f;
   backdrop-filter: blur(12px);
-  background:      rgba(13, 13, 13, 0.85) !important;
+  background:      rgba(13, 13, 13, 0.4) !important;
 }
 
 
