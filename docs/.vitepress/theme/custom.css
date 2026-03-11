@@ -237,16 +237,19 @@ body:has(.VPHome) .rp-wrap {
 .VPHero .name {
   background: linear-gradient(
     90deg,
-    #ff6b6b, #54a0ff, #5f27cd, #ff6b6b, #54a0ff, #5f27cd, #ff6b6b
+    #ff6b6b, #54a0ff, #5f27cd, #ff6b6b
   );
   background-size:         200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip:         text;
-  animation:               name-slide 4s linear infinite;
+  animation:               name-slide 4s ease-in-out infinite;
 }
 
 @keyframes name-slide {
-  0%   { background-position: 0%   center; }
-  100% { background-position: 200% center; }
+  0%        { background-position: 0%   center; }
+  37.5%     { background-position: 100% center; }
+  50%        { background-position: 100% center; }
+  87.5%     { background-position: 0%   center; }
+  100%      { background-position: 0%   center; }
 }
