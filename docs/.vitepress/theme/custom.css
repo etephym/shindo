@@ -234,26 +234,19 @@ body:has(.VPHome) .rp-wrap {
    Hero name — animated gradient left to right
    Uses @property for true gradient animation (Chrome/Edge)
    ============================================================= */
-@property --grad-pos {
-  syntax:        '<percentage>';
-  inherits:      false;
-  initial-value: 0%;
-}
-
 .VPHero .name {
   background: linear-gradient(
     90deg,
-    #ff6b6b var(--grad-pos),
-    #54a0ff calc(var(--grad-pos) + 50%),
-    #5f27cd calc(var(--grad-pos) + 100%)
+    #ff6b6b, #54a0ff, #5f27cd, #ff6b6b, #54a0ff, #5f27cd, #ff6b6b
   );
+  background-size:         200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip:         text;
-  animation:               grad-move 3s ease-in-out infinite alternate;
+  animation:               name-slide 4s linear infinite;
 }
 
-@keyframes grad-move {
-  0%   { --grad-pos: 0%;   }
-  100% { --grad-pos: 100%; }
+@keyframes name-slide {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 200% center; }
 }
