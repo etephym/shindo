@@ -307,3 +307,11 @@ body:has(.VPHome) .rp-wrap {
 html {
   background-color: #f6f6f7 !important;
 }
+
+/* =============================================================
+   Navbar — blur for light theme too
+   ============================================================= */
+.VPNav .VPNavBar {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
