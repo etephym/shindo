@@ -217,3 +217,22 @@ html { scroll-behavior: smooth; }
   border-left: 3px solid #54a0ff !important;
   border-radius: 4px !important;
 }
+
+/* =============================================================
+   Highlight heading targeted by anchor — pure CSS, no plugin
+   :target fires when URL hash matches element id
+   ============================================================= */
+.vp-doc h2:target,
+.vp-doc h3:target {
+  background:    rgba(84, 160, 255, 0.08);
+  border-left:   3px solid #54a0ff;
+  border-radius: 4px;
+  padding-left:  12px;
+  margin-left:   -15px;
+  animation:     heading-flash 1.8s ease forwards;
+}
+
+@keyframes heading-flash {
+  0%   { background: rgba(84, 160, 255, 0.22); }
+  100% { background: rgba(84, 160, 255, 0.08); }
+}
