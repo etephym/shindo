@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --vp-font-family-base: 'Inter', sans-serif;
+}
+
+/* ===== DARK THEME ===== */
 .dark {
   --vp-c-bg: #0d0d0d;
   --vp-c-bg-soft: #141414;
@@ -8,27 +15,78 @@
   --vp-c-divider: #222222;
   --vp-c-gutter: #080808;
 }
+html.dark { background-color: #0d0d0d !important; }
 
-html.dark {
-  background-color: #0d0d0d !important;
-}
-
-/* Радужный градиент тайтла */
+/* ===== RAINBOW ANIMATED TITLE ===== */
 .VPHero .name {
-  background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff, #5f27cd);
-  background-size: 300% 300%;
+  background: linear-gradient(270deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff, #5f27cd, #ff6b6b);
+  background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: rainbow 4s ease infinite;
+  animation: rainbow 6s ease infinite;
 }
-
 @keyframes rainbow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* ===== HERO TAGLINE GLOW ===== */
+.VPHero .tagline {
+  opacity: 0.85;
+  font-size: 18px !important;
+}
+
+/* ===== NAV GLOW ===== */
+.dark .VPNav {
+  border-bottom: 1px solid #1f1f1f;
+  backdrop-filter: blur(12px);
+  background: rgba(13,13,13,0.85) !important;
+}
+
+/* ===== SIDEBAR ===== */
+.dark .VPSidebar {
+  backdrop-filter: blur(8px);
+  background: rgba(13,13,13,0.95) !important;
+}
+
+/* ===== CUSTOM BLOCKS ===== */
 .vp-doc .custom-block.tip { border-color: #5eead4; }
+.vp-doc .custom-block.tip .custom-block-title { color: #5eead4; }
 .vp-doc .custom-block.warning { border-color: #fbbf24; }
+.vp-doc .custom-block.warning .custom-block-title { color: #fbbf24; }
 .vp-doc .custom-block.danger { border-color: #f87171; }
+.vp-doc .custom-block.danger .custom-block-title { color: #f87171; }
+.vp-doc .custom-block.info { border-color: #60a5fa; }
+
+/* ===== BADGES ===== */
+.vp-badge.tip { background: rgba(94,234,212,0.15); color: #5eead4; border: 1px solid #5eead420; }
+.vp-badge.warning { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid #fbbf2420; }
+.vp-badge.danger { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid #f8717120; }
+
+/* ===== LINKS HOVER ===== */
+.vp-doc a {
+  transition: color 0.2s;
+}
+
+/* ===== CODE BLOCKS ===== */
+.dark div[class*='language-'] {
+  background: #111111 !important;
+  border: 1px solid #222;
+}
+
+/* ===== SMOOTH SCROLL ===== */
+html { scroll-behavior: smooth; }
+
+/* ===== TABLE STYLE ===== */
+.vp-doc table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.dark .vp-doc tr:nth-child(even) {
+  background: #141414;
+}
+.dark .vp-doc th {
+  background: #1a1a1a;
+}
