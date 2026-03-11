@@ -204,3 +204,10 @@ html { scroll-behavior: smooth; }
   60%  { text-decoration-color: rgba(84, 160, 255, 0.40); }
   100% { text-decoration-color: rgba(84, 160, 255, 0.00); }
 }
+
+/* =============================================================
+   Nav flyout — pointer cursor on trigger button
+   ============================================================= */
+.VPFlyout .button {
+  cursor: pointer;
+}
