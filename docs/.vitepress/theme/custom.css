@@ -236,3 +236,21 @@ html { scroll-behavior: smooth; }
   0%   { background: rgba(84, 160, 255, 0.22); }
   100% { background: rgba(84, 160, 255, 0.08); }
 }
+
+/* =============================================================
+   Heading highlight on sidebar anchor click
+   Class is added/removed by HeadingHighlight component in index.ts
+   ============================================================= */
+.vp-doc .heading-highlighted {
+  background:    rgba(84, 160, 255, 0.12);
+  border-left:   3px solid #54a0ff;
+  border-radius: 4px;
+  padding-left:  12px;
+  margin-left:   -15px;
+  animation:     heading-flash 2s ease forwards;
+}
+
+@keyframes heading-flash {
+  0%   { background: rgba(84, 160, 255, 0.28); }
+  100% { background: transparent; }
+}

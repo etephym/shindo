@@ -19,6 +19,32 @@ import ReadingTime from './components/ReadingTime.vue'
 // Global styles
 import './custom.css'
 
+// Highlights the heading that matches current URL hash
+// Works with VitePress router (hash doesn't trigger CSS :target)
+const HeadingHighlight = {
+  setup() {
+    const route = useRoute()
+
+    const highlight = () => {
+      // Remove previous highlight
+      document.querySelectorAll('.heading-highlighted').forEach(el => {
+        el.classList.remove('heading-highlighted')
+      })
+      const hash = decodeURIComponent(window.location.hash.slice(1))
+      if (!hash) return
+      const target = document.getElementById(hash)
+      if (!target) return
+      target.classList.add('heading-highlighted')
+      // Remove highlight after animation finishes
+      setTimeout(() => target.classList.remove('heading-highlighted'), 2000)
+    }
+
+    onMounted(() => nextTick(highlight))
+    watch(() => route.hash, () => nextTick(highlight))
+  },
+  render: () => null,
+}
+
 // Re-initializes zoom on every route change so new images are picked up
 const ZoomSetup = {
   setup() {
@@ -40,6 +66,7 @@ export default {
         h(Breadcrumb),
         h(ReadingTime),
         h(ZoomSetup),
+        h(HeadingHighlight),
       ]),
     })
   },
