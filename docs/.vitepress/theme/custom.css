@@ -253,3 +253,16 @@ body:has(.VPHome) .rp-wrap {
   87.5%     { background-position: 0%   center; }
   100%      { background-position: 0%   center; }
 }
+
+/* =============================================================
+   Navbar — transparent + blur on homepage only
+   ============================================================= */
+.dark .VPNav {
+  background:      rgba(13, 13, 13, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.VPNav {
+  background:      rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+}
