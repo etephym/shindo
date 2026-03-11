@@ -20,7 +20,6 @@
     "doc": "docs"
   },
   "dependencies": {
-    "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.18.2",
     "algoliasearch": "^5.49.2",
     "birpc": "^2.9.0",
     "ccount": "^2.0.1",

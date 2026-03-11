@@ -12,12 +12,6 @@ import mediumZoom from 'medium-zoom'
 import vitepressNprogress from 'vitepress-plugin-nprogress'
 import 'vitepress-plugin-nprogress/lib/css/index.css'
 
-// Plugin: highlight heading on anchor jump
-import {
-  NolebaseHighlightTargetedHeading,
-} from '@nolebase/vitepress-plugin-highlight-targeted-heading/client'
-import '@nolebase/vitepress-plugin-highlight-targeted-heading/client/style.css'
-
 // Components
 import Breadcrumb  from './components/Breadcrumb.vue'
 import ReadingTime from './components/ReadingTime.vue'
@@ -25,7 +19,6 @@ import ReadingTime from './components/ReadingTime.vue'
 // Global styles
 import './custom.css'
 
-// --- medium-zoom setup component ---
 // Re-initializes zoom on every route change so new images are picked up
 const ZoomSetup = {
   setup() {
@@ -48,7 +41,6 @@ export default {
         h(ReadingTime),
         h(ZoomSetup),
       ]),
-      'layout-top': () => h(NolebaseHighlightTargetedHeading),
     })
   },
 
