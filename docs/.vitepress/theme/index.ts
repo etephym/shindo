@@ -1,27 +1,21 @@
-// =============================================================
-// VitePress Theme Entry Point
-// =============================================================
-
 import DefaultTheme from 'vitepress/theme'
 import { h, nextTick, onMounted, watch } from 'vue'
 import { useRoute } from 'vitepress'
 import type { EnhanceAppContext } from 'vitepress'
 import mediumZoom from 'medium-zoom'
 
-// Plugin: NProgress
 import vitepressNprogress from 'vitepress-plugin-nprogress'
 import 'vitepress-plugin-nprogress/lib/css/index.css'
 
-// Components
-import Breadcrumb       from './components/Breadcrumb.vue'
-import ReadingTime      from './components/ReadingTime.vue'
-import ReadingProgress  from './components/ReadingProgress.vue'
-import CopyHeadingLink  from './components/CopyHeadingLink.vue'
+import Breadcrumb          from './components/Breadcrumb.vue'
+import ReadingTime         from './components/ReadingTime.vue'
+import ReadingProgress     from './components/ReadingProgress.vue'
+import CopyHeadingLink     from './components/CopyHeadingLink.vue'
+import ParticlesBackground from './components/ParticlesBackground.vue'
+import ShareButton         from './components/ShareButton.vue'
 
-// Global styles
 import './custom.css'
 
-// Re-initializes zoom on every route change so new images are picked up
 const ZoomSetup = {
   setup() {
     const route = useRoute()
@@ -33,15 +27,13 @@ const ZoomSetup = {
   render: () => null,
 }
 
-// Highlights the heading that matches current URL hash
 const HeadingHighlight = {
   setup() {
     const route = useRoute()
-
     const highlight = () => {
-      document.querySelectorAll('.heading-highlighted').forEach(el => {
+      document.querySelectorAll('.heading-highlighted').forEach(el =>
         el.classList.remove('heading-highlighted')
-      })
+      )
       const hash = decodeURIComponent(window.location.hash.slice(1))
       if (!hash) return
       const target = document.getElementById(hash)
@@ -49,7 +41,6 @@ const HeadingHighlight = {
       target.classList.add('heading-highlighted')
       setTimeout(() => target.classList.remove('heading-highlighted'), 2500)
     }
-
     onMounted(() => nextTick(highlight))
     watch(() => route.hash, () => nextTick(highlight))
   },
@@ -61,6 +52,8 @@ export default {
 
   Layout() {
     return h(DefaultTheme.Layout, null, {
+      // Particles only show on homepage via internal check in the component
+      'home-hero-before': () => h(ParticlesBackground),
       'doc-before': () => h('div', { class: 'doc-tools' }, [
         h(Breadcrumb),
         h(ReadingTime),
@@ -68,7 +61,7 @@ export default {
         h(HeadingHighlight),
         h(CopyHeadingLink),
       ]),
-      // Reading progress badge — shown on all pages
+      'doc-after':    () => h(ShareButton),
       'layout-bottom': () => h(ReadingProgress),
     })
   },

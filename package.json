@@ -20,6 +20,8 @@
     "doc": "docs"
   },
   "dependencies": {
+    "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/slim": "^3.9.1",
     "algoliasearch": "^5.49.2",
     "birpc": "^2.9.0",
     "ccount": "^2.0.1",
