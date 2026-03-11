@@ -264,3 +264,23 @@ body:has(.VPHome) .rp-wrap {
 .VPNav {
   background: rgba(255, 255, 255, 0.4) !important;
 }
+
+/* =============================================================
+   Navbar — force transparent background
+   ============================================================= */
+.dark .VPNav .VPNavBar,
+.dark .VPNavBar {
+  background-color: rgba(13, 13, 13, 0.3) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.VPNav .VPNavBar,
+.VPNavBar {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark .VPNavBar .container,
+.VPNavBar .container {
+  background: transparent !important;
+}
