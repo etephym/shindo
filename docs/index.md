@@ -3,12 +3,12 @@ layout: home
 
 title: Shindo Life Docs
 
-description: "Финальная версия сайта: полный гайд, советы и актуальные боевые пресеты."
+description: Гайды по Shindo + большая коллекция шаблонов VitePress.
 
 hero:
   name: "Shindo Life"
   text: "Docs by ETEPHYM"
-  tagline: Гайды, механики, готовые пресеты и практические советы для PvP/PvE
+  tagline: Гайды, механики и готовые шаблоны VitePress в одном месте
   image:
     src: /logo.jpg
     alt: Shindo Life
@@ -16,6 +16,9 @@ hero:
     - theme: brand
       text: 📖 Открыть Guide
       link: /guide
+    - theme: alt
+      text: 🧩 VitePress Templates
+      link: /vitepress-templates
     - theme: alt
       text: 💡 Tips & Tricks
       link: /tips
@@ -25,16 +28,16 @@ features:
     title: Игровые гайды
     details: Менторы, расы, предметы, антидоджи, полезные связки и термины.
     link: /guide
+  - icon: 🧩
+    title: Полный шаблон VitePress
+    details: Примеры для frontmatter, навигации, custom containers, code groups и runtime API.
+    link: /vitepress-templates
   - icon: 🧠
-    title: Готовые пресеты
-    details: Конкретные рабочие схемы для боёв, фарма и контроля без абстрактных шаблонов.
-    link: /guide#готовые-пресеты-билдов
-  - icon: 🛠️
-    title: Interactive Build Planner
-    details: В Guide и Tips встроены интерактивные шаблоны билда для PvP/War/Farm.
-    link: /tips#интерактивный-шаблон-билда
+    title: Шаблоны под доработку
+    details: Можно копировать блоки в свой проект и адаптировать под любую структуру контента.
+    link: /markdown-examples
   - icon: 📦
-    title: Контент без воды
-    details: "Упор на практику: что брать, как играть, где ошибаются и как закрывать матчапы."
-    link: /tips
+    title: Runtime API
+    details: useData, useRoute, withBase и примеры компонентов под VitePress.
+    link: /api-examples
 ---

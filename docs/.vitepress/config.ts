@@ -28,7 +28,7 @@ export default defineConfig({
   lang: 'ru-RU',
   title: 'Shindo Life Docs',
   titleTemplate: ':title · Shindo Life',
-  description: 'Финальная документация по Shindo Life: гайды, лучшие практики и готовые билды.',
+  description: 'Максимально полный шаблон по VitePress + гайды и тир-листы по Shindo Life.',
 
   // Глобальные опции сборки/маршрутизации
   cleanUrls: true,
@@ -41,7 +41,7 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#0f172a' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'Shindo Life Docs' }],
-    ['meta', { property: 'og:description', content: 'Гайды, советы и лучшие билды по Shindo Life.' }],
+    ['meta', { property: 'og:description', content: 'Гайды, шаблоны и best-practices по VitePress.' }],
   ],
 
   sitemap: {
@@ -63,6 +63,7 @@ export default defineConfig({
       { text: '🏠 Главная', link: '/' },
       { text: '📖 Гайд', link: '/guide' },
       { text: '💡 Tips', link: '/tips' },
+      { text: '🧩 VitePress Templates', link: '/vitepress-templates' },
       {
         text: '🔗 Ссылки',
         items: [
@@ -83,11 +84,12 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Дополнительно',
+        text: 'VitePress Starter Pack',
         collapsed: false,
         items: [
-          { text: 'FAQ и термины', link: '/guide#термины' },
-          { text: 'Антидоджи и связки', link: '/tips#список-антидоджей' },
+          { text: 'VitePress Templates', link: '/vitepress-templates', badge: { type: 'tip', text: 'NEW' } },
+          { text: 'Markdown Examples', link: '/markdown-examples' },
+          { text: 'Runtime API Examples', link: '/api-examples' },
         ],
       },
     ],

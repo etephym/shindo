@@ -7,7 +7,7 @@ import 'vitepress-plugin-nprogress/lib/css/index.css'
 
 import Breadcrumb from './components/Breadcrumb.vue'
 import ReadingTime from './components/ReadingTime.vue'
-import BuildTemplateBoard from './components/BuildTemplateBoard.vue'
+import TemplateCallout from './components/TemplateCallout.vue'
 
 import './style.css'
 import './custom.css'
@@ -25,7 +25,7 @@ export default {
     DefaultTheme.enhanceApp(ctx)
     vitepressNprogress(ctx)
 
-    // Глобальный интерактивный блок планировщика билдов для doc-страниц.
-    ctx.app.component('BuildTemplateBoard', BuildTemplateBoard)
+    // Глобальный компонент для быстрых заметок-шаблонов в markdown.
+    ctx.app.component('TemplateCallout', TemplateCallout)
   },
 }
