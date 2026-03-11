@@ -4,13 +4,13 @@ layout: home
 hero:
   name: "Shindo Life"
   text: "Docs by ETEPHYM"
-  tagline: Все гайды, тир-листы и механики в одном месте
+  tagline: All guides, tier lists and mechanics in one place
   image:
     src: /logo.jpg
     alt: Shindo Life
   actions:
     - theme: brand
-      text: 📖 Читать гайд
+      text: 📖 Read the Guide
       link: /guide
     - theme: alt
       text: 💡 Tips & Tricks
@@ -21,27 +21,27 @@ hero:
 
 features:
   - icon: ⚔️
-    title: Менторы и расы
-    details: Полный разбор всех менторов, пассивок и рас. Тир-листы и советы по комбо.
+    title: Mentors & Races
+    details: Full breakdown of all mentors, passives, and races. Tier lists and combo tips.
     link: /guide#менторы
   - icon: 🧪
-    title: Элементы и кенджутсу
-    details: Тир-листы по элементам, кенджутсу, саб-модам и саб-абилкам.
+    title: Elements & Kenjutsu
+    details: Tier lists for elements, kenjutsu, sub modes and sub abilities.
     link: /guide#elements
   - icon: 💊
-    title: Хилки и предметы
-    details: Лучшие хилки, оружие, throwable и companion для любой ситуации.
+    title: Heals & Items
+    details: Best heals, weapons, throwables and companions for every situation.
     link: /guide#хилки
   - icon: 💡
     title: Tips & Tricks
-    details: Продвинутые советы, лайфхаки и механики для повышения скилла.
+    details: Advanced tips, tricks and mechanics to improve your gameplay.
     link: /tips
   - icon: 📖
-    title: Термины
-    details: ПБ, ББ, iFrame, Grab, Andodge — все термины с объяснением.
+    title: Terms
+    details: PB, BB, iFrame, Grab, Andodge — all terms explained.
     link: /guide#термины
   - icon: 🐛
-    title: Баг слотов
-    details: Как увеличить количество слотов скиллов с телефона.
+    title: Slot Bug
+    details: How to increase your skill slot count from your phone.
     link: /guide#баг-слотов
 ---

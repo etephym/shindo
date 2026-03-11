@@ -1,105 +1,141 @@
+/* =============================================================
+   Custom Styles for Shindo Life Docs
+   VitePress default theme overrides
+   ============================================================= */
+
+/* --- Google Fonts: Inter --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   --vp-font-family-base: 'Inter', sans-serif;
 }
 
-/* ===== DARK THEME ===== */
-.dark {
-  --vp-c-bg: #0d0d0d;
-  --vp-c-bg-soft: #141414;
-  --vp-c-bg-mute: #1a1a1a;
-  --vp-c-bg-alt: #0d0d0d;
-  --vp-sidebar-bg-color: #0d0d0d;
-  --vp-nav-bg-color: #0d0d0d;
-  --vp-c-divider: #222222;
-  --vp-c-gutter: #080808;
-}
-html.dark { background-color: #0d0d0d !important; }
 
-/* ===== RAINBOW ANIMATED TITLE ===== */
+/* =============================================================
+   Dark theme color overrides
+   ============================================================= */
+.dark {
+  --vp-c-bg:           #0d0d0d;
+  --vp-c-bg-soft:      #141414;
+  --vp-c-bg-mute:      #1a1a1a;
+  --vp-c-bg-alt:       #0d0d0d;
+  --vp-sidebar-bg-color: #0d0d0d;
+  --vp-nav-bg-color:   #0d0d0d;
+  --vp-c-divider:      #222222;
+  --vp-c-gutter:       #080808;
+}
+html.dark {
+  background-color: #0d0d0d !important;
+}
+
+
+/* =============================================================
+   Navbar — frosted glass effect
+   ============================================================= */
+.dark .VPNav {
+  border-bottom: 1px solid #1f1f1f;
+  backdrop-filter: blur(12px);
+  background: rgba(13, 13, 13, 0.85) !important;
+}
+
+
+/* =============================================================
+   Sidebar — subtle blur background
+   ============================================================= */
+.dark .VPSidebar {
+  backdrop-filter: blur(8px);
+  background: rgba(13, 13, 13, 0.95) !important;
+}
+
+
+/* =============================================================
+   Hero section — homepage title animated rainbow gradient
+   ============================================================= */
 .VPHero .name {
-  background: linear-gradient(270deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff, #5f27cd, #ff6b6b);
+  background: linear-gradient(
+    270deg,
+    #ff6b6b, #feca57, #48dbfb,
+    #ff9ff3, #54a0ff, #5f27cd, #ff6b6b
+  );
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: rainbow 6s ease infinite;
 }
+
 @keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
 }
 
-/* ===== NAV BLUR ===== */
-.dark .VPNav {
-  border-bottom: 1px solid #1f1f1f;
-  backdrop-filter: blur(12px);
-  background: rgba(13,13,13,0.85) !important;
-}
 
-/* ===== SIDEBAR ===== */
-.dark .VPSidebar {
-  backdrop-filter: blur(8px);
-  background: rgba(13,13,13,0.95) !important;
-}
+/* =============================================================
+   Custom callout blocks (tip / warning / danger / info)
+   ============================================================= */
+.vp-doc .custom-block.tip     { border-color: #5eead4; }
+.vp-doc .custom-block.tip     .custom-block-title { color: #5eead4; }
 
-/* ===== HERO IMAGE ===== */
-.VPHero .image-src {
-  border-radius: 50%;
-  box-shadow: 0 0 40px rgba(167,139,250,0.4);
-  transition: box-shadow 0.3s ease;
-}
-.VPHero .image-src:hover {
-  box-shadow: 0 0 70px rgba(167,139,250,0.7);
-}
-
-/* ===== CUSTOM BLOCKS ===== */
-.vp-doc .custom-block.tip { border-color: #5eead4; }
-.vp-doc .custom-block.tip .custom-block-title { color: #5eead4; }
 .vp-doc .custom-block.warning { border-color: #fbbf24; }
 .vp-doc .custom-block.warning .custom-block-title { color: #fbbf24; }
-.vp-doc .custom-block.danger { border-color: #f87171; }
-.vp-doc .custom-block.danger .custom-block-title { color: #f87171; }
-.vp-doc .custom-block.info { border-color: #60a5fa; }
-.vp-doc .custom-block.info .custom-block-title { color: #60a5fa; }
 
-/* ===== BADGES ===== */
+.vp-doc .custom-block.danger  { border-color: #f87171; }
+.vp-doc .custom-block.danger  .custom-block-title { color: #f87171; }
+
+.vp-doc .custom-block.info    { border-color: #60a5fa; }
+.vp-doc .custom-block.info    .custom-block-title { color: #60a5fa; }
+
+
+/* =============================================================
+   Badge component colors
+   Usage in markdown: <Badge type="tip" text="S+" />
+   ============================================================= */
 .vp-badge.tip {
-  background: rgba(94,234,212,0.12);
-  color: #5eead4;
-  border: 1px solid rgba(94,234,212,0.25);
+  background: rgba(94, 234, 212, 0.12);
+  color:      #5eead4;
+  border:     1px solid rgba(94, 234, 212, 0.25);
 }
 .vp-badge.warning {
-  background: rgba(251,191,36,0.12);
-  color: #fbbf24;
-  border: 1px solid rgba(251,191,36,0.25);
+  background: rgba(251, 191, 36, 0.12);
+  color:      #fbbf24;
+  border:     1px solid rgba(251, 191, 36, 0.25);
 }
 .vp-badge.danger {
-  background: rgba(248,113,113,0.12);
-  color: #f87171;
-  border: 1px solid rgba(248,113,113,0.25);
+  background: rgba(248, 113, 113, 0.12);
+  color:      #f87171;
+  border:     1px solid rgba(248, 113, 113, 0.25);
 }
 .vp-badge.info {
-  background: rgba(96,165,250,0.12);
-  color: #60a5fa;
-  border: 1px solid rgba(96,165,250,0.25);
+  background: rgba(96, 165, 250, 0.12);
+  color:      #60a5fa;
+  border:     1px solid rgba(96, 165, 250, 0.25);
 }
 
-/* ===== CODE BLOCKS ===== */
+
+/* =============================================================
+   Code blocks
+   ============================================================= */
 .dark div[class*='language-'] {
   background: #111111 !important;
-  border: 1px solid #222;
+  border:     1px solid #222;
 }
 
-/* ===== TABLES ===== */
-.vp-doc table { border-collapse: collapse; width: 100%; }
-.dark .vp-doc tr:nth-child(even) { background: #141414; }
-.dark .vp-doc th { background: #1a1a1a; }
 
-/* ===== SMOOTH SCROLL ===== */
+/* =============================================================
+   Tables — alternating row colors
+   ============================================================= */
+.vp-doc table        { border-collapse: collapse; width: 100%; }
+.dark .vp-doc tr:nth-child(even) { background: #141414; }
+.dark .vp-doc th     { background: #1a1a1a; }
+
+
+/* =============================================================
+   Misc
+   ============================================================= */
+
+/* Smooth anchor scrolling */
 html { scroll-behavior: smooth; }
 
-/* ===== LINKS ===== */
+/* Subtle link transition */
 .vp-doc a { transition: color 0.2s; }
