@@ -9,7 +9,7 @@ hero:
   text: "Docs by ETEPHYM"
   tagline: All guides, tier lists and mechanics in one place
   image:
-    src: /logo.jpg
+    src: /logo.png
     alt: Shindo Life
   actions:
     - theme: brand
