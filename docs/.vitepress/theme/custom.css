@@ -257,61 +257,27 @@ body:has(.VPHome) .rp-wrap {
 /* =============================================================
    Navbar — more transparent
    ============================================================= */
-.dark .VPNav {
-  background: rgba(13, 13, 13, 0.4) !important;
-}
-
-.VPNav {
-  background: rgba(255, 255, 255, 0.4) !important;
-}
 
 /* =============================================================
-   Navbar — force transparent background
+   Navbar — transparent + blur for both themes
    ============================================================= */
-.dark .VPNav .VPNavBar,
+.VPNavBar,
+.VPNav .VPNavBar {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
 .dark .VPNavBar {
   background-color: rgba(13, 13, 13, 0.3) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-.VPNav .VPNavBar,
 .VPNavBar {
   background-color: rgba(255, 255, 255, 0.3) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-.dark .VPNavBar .container,
-.VPNavBar .container {
+.VPNavBar .container,
+.VPNavBar .content {
   background: transparent !important;
-}
-
-/* =============================================================
-   Doc pages — transparent content background
-   ============================================================= */
-.dark .VPDoc,
-.dark .VPContent,
-.dark #VPContent {
-  background: transparent !important;
-}
-
-.VPDoc,
-.VPContent,
-#VPContent {
-  background: transparent !important;
-}
-
-.dark html {
-  background-color: #0d0d0d !important;
-}
-
-html {
-  background-color: #f6f6f7 !important;
-}
-
-/* =============================================================
-   Navbar — blur for light theme too
-   ============================================================= */
-.VPNav .VPNavBar {
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
 }
