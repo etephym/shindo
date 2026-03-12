@@ -300,3 +300,46 @@ html:not(.dark) .VPScreen,
 html:not(.dark) .VPScreenMenu {
   background: rgba(255, 255, 255, 0.6) !important;
 }
+
+/* =============================================================
+   Mobile menu — nav items styling
+   ============================================================= */
+.VPScreenMenuItemAppearance,
+.VPScreenMenuItemTemplate {
+  backdrop-filter:         blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border-radius:           12px !important;
+  overflow:                hidden;
+}
+
+.dark .VPScreenMenuItemAppearance,
+.dark .VPScreenMenuItemTemplate {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border:     1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html:not(.dark) .VPScreenMenuItemAppearance,
+html:not(.dark) .VPScreenMenuItemTemplate {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border:     1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Nav links — Главная, Контент */
+.VPScreenMenuGroupLink,
+.VPScreenMenuGroupSection,
+.VPScreenMenuLink {
+  border-radius: 12px !important;
+  overflow:      hidden;
+}
+
+.dark .VPScreenMenuGroupLink,
+.dark .VPScreenMenuGroupSection,
+.dark .VPScreenMenuLink {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html:not(.dark) .VPScreenMenuGroupLink,
+html:not(.dark) .VPScreenMenuGroupSection,
+html:not(.dark) .VPScreenMenuLink {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
