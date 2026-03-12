@@ -289,128 +289,47 @@ html:not(.dark) .VPNavScreen {
   background: rgba(255, 255, 255, 0.75) !important;
 }
 
-/* Главная, Контент */
+/* Menu items — glass cards */
 .VPNavScreenMenuLink,
-.VPNavScreenMenuGroup {
-  background:    rgba(255, 255, 255, 0.08) !important;
+.VPNavScreenMenuGroup,
+.VPNavScreenAppearance {
+  background:    rgba(255, 255, 255, 0.04) !important;
   border-radius: 12px !important;
-  border:        1px solid rgba(255, 255, 255, 0.1) !important;
-  overflow:      hidden;
+  border:        1px solid rgba(255, 255, 255, 0.06) !important;
+  margin-bottom: 4px !important;
 }
 
 html:not(.dark) .VPNavScreenMenuLink,
-html:not(.dark) .VPNavScreenMenuGroup {
-  background: rgba(0, 0, 0, 0.06) !important;
-  border:     1px solid rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Тема */
-.VPNavScreenAppearance {
-  background:    rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important;
-  border:        1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
+html:not(.dark) .VPNavScreenMenuGroup,
 html:not(.dark) .VPNavScreenAppearance {
   background: rgba(0, 0, 0, 0.06) !important;
   border:     1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
-/* =============================================================
-   Mobile nav — compact menu items height
-   ============================================================= */
-.VPNavScreenMenuLink .VPLink,
-.VPNavScreenMenuLink,
-.VPNavScreenMenuGroup .button {
-  padding-top:    10px !important;
-  padding-bottom: 10px !important;
-}
-
-/* =============================================================
-   Mobile nav — compact link height
-   ============================================================= */
+/* Equal padding for all top-level items */
 a.VPNavScreenMenuLink {
-  padding-top:    10px !important;
-  padding-bottom: 10px !important;
-}
-
-/* =============================================================
-   Mobile nav — reduce gap between menu items
-   ============================================================= */
-.VPNavScreenMenu .VPNavScreenMenuLink,
-.VPNavScreenMenu .VPNavScreenMenuGroup {
-  margin-bottom: 4px !important;
-}
-
-.VPNavScreen .container {
-  padding-top:    12px !important;
-  padding-bottom: 12px !important;
-}
-
-/* =============================================================
-   Mobile nav — tighter padding + left indent for text
-   ============================================================= */
-a.VPNavScreenMenuLink,
-.VPNavScreenMenuGroup .button {
   padding-top:    7px !important;
   padding-bottom: 7px !important;
   padding-left:   14px !important;
 }
 
-/* =============================================================
-   Mobile nav — fix Контент button padding + reduce item opacity
-   ============================================================= */
+/* Button inside group — same height as link */
 .VPNavScreenMenuGroup .button {
   padding-top:    7px !important;
   padding-bottom: 7px !important;
+  padding-left:   14px !important;
+  height:         38px !important;
+  min-height:     unset !important;
 }
 
-.VPNavScreenMenuLink,
-.VPNavScreenMenuGroup,
-.VPNavScreenAppearance {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border:     1px solid rgba(255, 255, 255, 0.06) !important;
+/* Force group height via scoped hash */
+.VPNavScreenMenuGroup[data-v-956364f9] {
+  height: 40px !important;
 }
 
-/* =============================================================
-   Mobile nav — fix Контент dropdown items size
-   ============================================================= */
-.VPNavScreenMenuGroup .items {
-  padding-top:    4px !important;
-  padding-bottom: 4px !important;
-}
-
-.VPNavScreenMenuGroup .item {
-  padding-top:    0 !important;
-  padding-bottom: 0 !important;
-}
-
+/* Dropdown items */
 .VPNavScreenMenuGroupLink {
   padding-top:    6px !important;
   padding-bottom: 6px !important;
   padding-left:   14px !important;
-}
-
-
-
-/* =============================================================
-   Mobile nav — match group height to link height
-   ============================================================= */
-:root {
-  --vp-nav-screen-menu-group-height: 40px;
-}
-
-/* =============================================================
-   Mobile nav — match button height to link height
-   ============================================================= */
-.VPNavScreenMenuGroup .button {
-  height: 38px !important;
-  min-height: unset !important;
-}
-
-/* =============================================================
-   Mobile nav — override scoped VitePress button height
-   ============================================================= */
-.VPNavScreenMenuGroup[data-v-956364f9] {
-  height: 40px !important;
 }
