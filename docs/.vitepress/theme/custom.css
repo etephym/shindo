@@ -239,3 +239,18 @@ html:not(.dark) header.VPNav {
 :root {
   --vp-nav-bg-color: transparent;
 }
+
+/* =============================================================
+   Homepage hero — glow on name and tagline text
+   ============================================================= */
+.VPHero .name,
+.VPHero .text {
+  filter:    drop-shadow(0 0 8px rgba(255, 107, 107, 0.5))
+             drop-shadow(0 0 20px rgba(84, 160, 255, 0.3));
+  animation: hero-glow 4s ease-in-out infinite;
+}
+
+.VPHero .tagline {
+  filter:    drop-shadow(0 0 6px rgba(84, 160, 255, 0.3));
+  animation: hero-glow 4s ease-in-out infinite;
+}
