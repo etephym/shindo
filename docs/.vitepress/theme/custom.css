@@ -405,3 +405,11 @@ a.VPNavScreenMenuLink,
 :root {
   --vp-nav-screen-menu-group-height: 40px;
 }
+
+/* =============================================================
+   Mobile nav — match button height to link height
+   ============================================================= */
+.VPNavScreenMenuGroup .button {
+  height: 38px !important;
+  min-height: unset !important;
+}
