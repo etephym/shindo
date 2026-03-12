@@ -132,7 +132,7 @@ html.dark {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip:         text;
-  animation:               rainbow 6s ease infinite;
+  animation:               rainbow 6s ease infinite, hero-glow 4s ease-in-out infinite;
 }
 
 @keyframes rainbow {
