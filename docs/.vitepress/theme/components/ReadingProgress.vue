@@ -16,7 +16,8 @@ let total      = 0
 function calcTotal() {
   const contentEl = document.querySelector('.vp-doc')
   if (contentEl) {
-    total = contentEl.scrollHeight - window.innerHeight
+    const rect = contentEl.getBoundingClientRect()
+    total = rect.top + window.scrollY + contentEl.scrollHeight - window.innerHeight
   } else {
     total = document.documentElement.scrollHeight - window.innerHeight
   }
