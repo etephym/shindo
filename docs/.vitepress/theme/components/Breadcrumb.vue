@@ -1,23 +1,29 @@
-<script setup>
-// Breadcrumb navigation bar
-// Renders: Home › PageName
-// Shown above reading time on every doc page
-
+<script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute, useData } from 'vitepress'
+import { useData, useRoute } from 'vitepress'
 
-const route      = useRoute()
-const { site }   = useData()
+const route = useRoute()
+const { site } = useData()
+
+function formatSegment(part: string): string {
+  return decodeURIComponent(part)
+    .replace(/\.html$/i, '')
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, char => char.toUpperCase())
+}
 
 const crumbs = computed(() => {
-  const parts  = route.path.replace(site.value.base, '').split('/').filter(Boolean)
-  const result = [{ text: 'Home', link: site.value.base }]
-  let path     = site.value.base
+  const normalizedPath = route.path.replace(site.value.base, '')
+  const parts = normalizedPath.split('/').filter(Boolean)
+  const isEnglish = parts[0] === 'en'
+
+  const homeText = isEnglish ? 'Home' : 'Главная'
+  const result = [{ text: homeText, link: site.value.base }]
+  let path = site.value.base
 
   for (const part of parts) {
-    path += part + '/'
-    const name = part.charAt(0).toUpperCase() + part.slice(1).replace('.html', '')
-    result.push({ text: name, link: path })
+    path += `${part}/`
+    result.push({ text: formatSegment(part), link: path })
   }
 
   return result
@@ -25,37 +31,42 @@ const crumbs = computed(() => {
 </script>
 
 <template>
-  <nav class="breadcrumb" v-if="crumbs.length > 1">
-    <span v-for="(crumb, i) in crumbs" :key="i">
-
-      <!-- Clickable parent crumbs -->
+  <nav v-if="crumbs.length > 1" class="breadcrumb" aria-label="Breadcrumb">
+    <span v-for="(crumb, i) in crumbs" :key="crumb.link">
       <a v-if="i < crumbs.length - 1" :href="crumb.link">{{ crumb.text }}</a>
-
-      <!-- Current page (not clickable) -->
       <span v-else class="current">{{ crumb.text }}</span>
-
-      <!-- Separator -->
       <span v-if="i < crumbs.length - 1" class="arrow"> › </span>
-
     </span>
   </nav>
 </template>
 
 <style scoped>
 .breadcrumb {
-  display:      flex;
-  align-items:  center;
-  flex-wrap:    wrap;
-  font-size:    13px;
-  color:        var(--vp-c-text-3);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--vp-c-text-3);
   margin-bottom: 10px;
 }
+
 .breadcrumb a {
-  color:       var(--vp-c-text-2);
+  color: var(--vp-c-text-2);
   text-decoration: none;
-  transition:  color 0.2s;
+  transition: color 0.2s;
 }
-.breadcrumb a:hover { color: var(--vp-c-brand); }
-.current { color: var(--vp-c-text-1); font-weight: 500; }
-.arrow   { opacity: 0.4; margin: 0 3px; }
+
+.breadcrumb a:hover {
+  color: var(--vp-c-brand);
+}
+
+.current {
+  color: var(--vp-c-text-1);
+  font-weight: 500;
+}
+
+.arrow {
+  opacity: 0.4;
+  margin: 0 3px;
+}
 </style>

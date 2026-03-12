@@ -1,26 +1,28 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute } from 'vitepress'
 
 const progress = ref(0)
-const visible  = ref(false)
-const idle     = ref(false)
+const visible = ref(false)
+const idle = ref(false)
+const route = useRoute()
 
-const SIZE   = 48
+const isEnglishRoute = () => route.path.startsWith('/en/')
+const idleLabel = () => (isEnglishRoute() ? 'Back to top' : 'Наверх')
+const progressLabel = () =>
+  isEnglishRoute() ? `${progress.value}% read` : `${progress.value}% прочитано`
+
+const SIZE = 48
 const RADIUS = 20
 const CIRCUM = 2 * Math.PI * RADIUS
 
 let idleTimer: ReturnType<typeof setTimeout> | null = null
 let total = 0
 let lastScroll = -1
+let recalcTimer: ReturnType<typeof setTimeout> | null = null
 
 function calcTotal() {
-  const contentEl = document.querySelector('.vp-doc')
-  if (contentEl) {
-    const rect = contentEl.getBoundingClientRect()
-    total = rect.top + window.scrollY + contentEl.scrollHeight - window.innerHeight
-  } else {
-    total = document.documentElement.scrollHeight - window.innerHeight
-  }
+  total = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
 }
 
 function update() {
@@ -37,26 +39,64 @@ function update() {
   }
 
   visible.value = scrollY > 100
-  idle.value    = false
+  idle.value = false
 
   if (idleTimer) clearTimeout(idleTimer)
-  idleTimer = setTimeout(() => { idle.value = true }, 3000)
+  idleTimer = setTimeout(() => {
+    idle.value = true
+  }, 3000)
+}
+
+function handleResize() {
+  calcTotal()
+  update()
+}
+
+function handleRouteChange() {
+  // Reset scroll cache so progress gets recomputed even at same scrollY.
+  lastScroll = -1
+  calcTotal()
+  update()
+
+  // Recalculate again after page transition/content paint.
+  if (recalcTimer) clearTimeout(recalcTimer)
+  recalcTimer = setTimeout(() => {
+    calcTotal()
+    update()
+  }, 200)
 }
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    scrollToTop()
+  }
+}
+
 onMounted(() => {
   calcTotal()
   window.addEventListener('scroll', update, { passive: true })
-  window.addEventListener('resize', () => { calcTotal(); update() })
+  window.addEventListener('resize', handleResize)
   update()
 })
 
+watch(
+  () => route.path,
+  async () => {
+    await nextTick()
+    handleRouteChange()
+  },
+)
+
 onUnmounted(() => {
   window.removeEventListener('scroll', update)
+  window.removeEventListener('resize', handleResize)
   if (idleTimer) clearTimeout(idleTimer)
+  if (recalcTimer) clearTimeout(recalcTimer)
 })
 
 const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
@@ -67,8 +107,11 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
     <div
       v-if="visible"
       class="rp-wrap"
-      :title="idle ? 'Наверх' : `${progress}% прочитано`"
+      role="button"
+      tabindex="0"
+      :title="idle ? idleLabel() : progressLabel()"
       @click="scrollToTop"
+      @keydown="handleKeydown"
     >
       <svg :width="SIZE" :height="SIZE" class="rp-ring">
         <circle
@@ -101,20 +144,20 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
 
 <style scoped>
 .rp-wrap {
-  position:        fixed;
-  bottom:          28px;
-  right:           28px;
-  z-index:         100;
-  width:           48px;
-  height:          48px;
-  display:         flex;
-  align-items:     center;
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  cursor:          pointer;
-  background:      rgba(13, 13, 13, 0.85);
-  border-radius:   50%;
-  box-shadow:      0 0 12px rgba(84, 160, 255, 0.12);
-  transition:      box-shadow 0.2s ease;
+  cursor: pointer;
+  background: rgba(13, 13, 13, 0.85);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(84, 160, 255, 0.12);
+  transition: box-shadow 0.2s ease;
 }
 
 :root:not(.dark) .rp-wrap {
@@ -122,10 +165,7 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
 }
 
-:root:not(.dark) .rp-label {
-  color: #2563eb;
-}
-
+:root:not(.dark) .rp-label,
 :root:not(.dark) .rp-arrow {
   color: #2563eb;
 }
@@ -136,8 +176,8 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
 
 .rp-ring {
   position: absolute;
-  top:      0;
-  left:     0;
+  top: 0;
+  left: 0;
 }
 
 .rp-arc {
@@ -145,26 +185,42 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
 }
 
 .rp-label {
-  font-size:   11px;
+  font-size: 11px;
   font-weight: 600;
-  color:       #54a0ff;
+  color: #54a0ff;
   line-height: 1;
   user-select: none;
 }
 
 .rp-arrow {
-  display:     flex;
+  display: flex;
   align-items: center;
-  color:       #54a0ff;
+  color: #54a0ff;
 }
 
 .icon-swap-enter-active,
-.icon-swap-leave-active { transition: opacity 0.25s ease, transform 0.25s ease; }
-.icon-swap-enter-from   { opacity: 0; transform: translateY(4px);  }
-.icon-swap-leave-to     { opacity: 0; transform: translateY(-4px); }
+.icon-swap-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.icon-swap-enter-from {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.icon-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
 
 .progress-fade-enter-active,
-.progress-fade-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
+.progress-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 .progress-fade-enter-from,
-.progress-fade-leave-to     { opacity: 0; transform: translateY(8px); }
+.progress-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
 </style>
