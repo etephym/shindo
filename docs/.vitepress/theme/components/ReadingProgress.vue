@@ -111,16 +111,14 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
   align-items:     center;
   justify-content: center;
   cursor:          pointer;
-  background:      rgba(13, 13, 13, 0.45);
+  background:      rgba(13, 13, 13, 0.85);
   border-radius:   50%;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow:      0 0 12px rgba(84, 160, 255, 0.12);
   transition:      box-shadow 0.2s ease;
 }
 
 :root:not(.dark) .rp-wrap {
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
 }
 
@@ -130,10 +128,6 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
 
 :root:not(.dark) .rp-arrow {
   color: #2563eb;
-}
-
-:root:not(.dark) .rp-ring circle:last-child {
-  stroke: #2563eb;
 }
 
 .rp-wrap:hover {
