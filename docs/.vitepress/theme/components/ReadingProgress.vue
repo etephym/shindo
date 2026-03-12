@@ -5,12 +5,6 @@ import { useRoute } from 'vitepress'
 const progress = ref(0)
 const visible = ref(false)
 const idle = ref(false)
-const route = useRoute()
-
-const isEnglishRoute = () => route.path.startsWith('/en/')
-const idleLabel = () => (isEnglishRoute() ? 'Back to top' : 'Наверх')
-const progressLabel = () =>
-  isEnglishRoute() ? `${progress.value}% read` : `${progress.value}% прочитано`
 
 const SIZE = 48
 const RADIUS = 20
@@ -22,7 +16,14 @@ let lastScroll = -1
 let recalcTimer: ReturnType<typeof setTimeout> | null = null
 
 function calcTotal() {
-  total = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+  const contentEl = document.querySelector('.vp-doc')
+  if (contentEl) {
+    const rect = contentEl.getBoundingClientRect()
+    total = rect.top + window.scrollY + contentEl.scrollHeight - window.innerHeight
+    return
+  }
+
+  total = document.documentElement.scrollHeight - window.innerHeight
 }
 
 function update() {
@@ -50,20 +51,6 @@ function update() {
 function handleResize() {
   calcTotal()
   update()
-}
-
-function handleRouteChange() {
-  // Reset scroll cache so progress gets recomputed even at same scrollY.
-  lastScroll = -1
-  calcTotal()
-  update()
-
-  // Recalculate again after page transition/content paint.
-  if (recalcTimer) clearTimeout(recalcTimer)
-  recalcTimer = setTimeout(() => {
-    calcTotal()
-    update()
-  }, 200)
 }
 
 function scrollToTop() {
