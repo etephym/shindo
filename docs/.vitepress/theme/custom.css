@@ -325,3 +325,11 @@ html:not(.dark) .VPNavScreenAppearance {
   padding-top:    10px !important;
   padding-bottom: 10px !important;
 }
+
+/* =============================================================
+   Mobile nav — compact link height
+   ============================================================= */
+a.VPNavScreenMenuLink {
+  padding-top:    10px !important;
+  padding-bottom: 10px !important;
+}
