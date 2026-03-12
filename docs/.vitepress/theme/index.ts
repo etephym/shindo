@@ -25,8 +25,13 @@ import './custom.css'
 const ZoomSetup = {
   setup() {
     const route = useRoute()
-    const initZoom = () =>
-      mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
+    let zoom: ReturnType<typeof mediumZoom> | null = null
+
+    const initZoom = () => {
+      zoom?.detach()
+      zoom = mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
+    }
+
     onMounted(() => nextTick(initZoom))
     watch(() => route.path, () => nextTick(initZoom))
   },
