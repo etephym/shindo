@@ -346,3 +346,13 @@ a.VPNavScreenMenuLink {
   padding-top:    12px !important;
   padding-bottom: 12px !important;
 }
+
+/* =============================================================
+   Mobile nav — tighter padding + left indent for text
+   ============================================================= */
+a.VPNavScreenMenuLink,
+.VPNavScreenMenuGroup .button {
+  padding-top:    7px !important;
+  padding-bottom: 7px !important;
+  padding-left:   14px !important;
+}
