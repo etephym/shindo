@@ -33,7 +33,7 @@ outline: [2, 3]
 Shindai → Jiso → Bruce
 :::
 
-### Stats Table
+### Stat Table
 
 | Mentor   | Chi  | Nin  | Tai  | HP   |
 |----------|------|------|------|------|
@@ -70,7 +70,7 @@ Shindai → Jiso → Bruce
 Narumaki is useless in 1v1 — raids and wars only.
 :::
 
-**Works well with race:** Celestial
+**Works well with races:** Celestial
 
 ### Bruce Kenichi (R4/C1)
 
@@ -84,7 +84,7 @@ Narumaki is useless in 1v1 — raids and wars only.
 
 ---
 
-## Rep Bonus (stats)
+## Reputation Bonus (Stats)
 
 The higher or lower your reputation, the more all stats are increased.
 
@@ -282,7 +282,7 @@ A race can only be rolled when there is no red DNA on the icon. You cannot re-ro
 
 ---
 
-## Throwable
+## Throwables
 
 ### S+
 
