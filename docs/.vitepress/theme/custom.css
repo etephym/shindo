@@ -34,8 +34,16 @@ html.dark {
    Navbar — frosted glass effect
    ============================================================= */
 .VPNav {
-  backdrop-filter:         blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  position: relative;
+}
+
+.VPNav::before {
+  content:                 '';
+  position:                absolute;
+  inset:                   0;
+  backdrop-filter:         blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index:                 -1;
 }
 
 .dark .VPNav {
