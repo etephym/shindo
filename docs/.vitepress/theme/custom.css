@@ -390,3 +390,10 @@ a.VPNavScreenMenuLink,
   padding-bottom: 6px !important;
   padding-left:   14px !important;
 }
+
+/* =============================================================
+   Mobile nav — remove fixed height from Контент group
+   ============================================================= */
+.VPNavScreenMenuGroup {
+  height: auto !important;
+}
