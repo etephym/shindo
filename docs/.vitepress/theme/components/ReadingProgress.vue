@@ -87,7 +87,6 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
           :stroke-dashoffset="strokeOffset(progress)"
           transform="rotate(-90, 24, 24)"
           class="rp-arc"
-          :class="{ 'rp-arc--done': progress >= 100 }"
         />
       </svg>
 
@@ -134,7 +133,7 @@ const strokeOffset = (pct: number) => CIRCUM - (pct / 100) * CIRCUM
 }
 
 .rp-arc {
-  transition: stroke-dashoffset 0.2s linear;
+  transition: stroke-dashoffset 0.4s ease-out;
 }
 
 .rp-arc--done {
