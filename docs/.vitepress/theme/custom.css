@@ -338,3 +338,15 @@ a.VPNavScreenMenuLink {
   line-height:    24px !important;
   font-size:      14px !important;
 }
+
+/* =============================================================
+   Mobile nav — fix group height both states
+   ============================================================= */
+.VPNavScreenMenuGroup[data-v-956364f9] {
+  height: 40px !important;
+}
+
+.VPNavScreenMenuGroup.open[data-v-956364f9] {
+  height: auto !important;
+  padding-bottom: 10px !important;
+}
