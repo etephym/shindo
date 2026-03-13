@@ -174,7 +174,7 @@ export default defineConfig({
         },
 
         footer: {
-          message:   'Сделано с ❤️ от <a href="https://github.com/ezrqq">ezrqq / lewisky</a> · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" style="max-width:1em;max-height:1em;margin-left:.2em;vertical-align:middle"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" style="max-width:1em;max-height:1em;margin-left:.2em;vertical-align:middle"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" style="max-width:1em;max-height:1em;margin-left:.2em;vertical-align:middle"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" style="max-width:1em;max-height:1em;margin-left:.2em;vertical-align:middle">',
+          message:   '<a href="https://github.com/ezrqq">ezrqq / lewisky</a> · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg">',
           copyright: 'Shindo Life Docs © 2024–2026',
         },
 

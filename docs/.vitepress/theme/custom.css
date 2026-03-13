@@ -309,3 +309,15 @@ a.VPNavScreenMenuLink,
   height: auto !important;
   padding-bottom: 10px !important;
 }
+
+/* =============================================================
+   Footer — CC license icons
+   ============================================================= */
+.VPFooter img {
+  display:        inline-block;
+  max-width:      1em;
+  max-height:     1em;
+  margin-left:    .2em;
+  vertical-align: middle;
+  opacity:        0.8;
+}
