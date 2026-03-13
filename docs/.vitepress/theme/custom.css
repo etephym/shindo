@@ -103,15 +103,15 @@ html:not(.dark) .VPNav {
    Homepage hero image — animated rainbow glow
    ============================================================= */
 .VPHero .image-src {
-  filter:     drop-shadow(0 0 7px rgba(255, 107, 107, 0.55))
-              drop-shadow(0 0 18px rgba(84, 160, 255, 0.4));
+  filter:     drop-shadow(0 0 7px  rgba(255, 107, 107, 0.55))
+              drop-shadow(0 0 18px rgba(84,  160, 255, 0.4));
   animation:  hero-glow 4s ease-in-out infinite;
   transition: filter 0.3s ease;
 }
 
 .VPHero .image-src:hover {
   filter: drop-shadow(0 0 14px rgba(255, 107, 107, 1))
-          drop-shadow(0 0 30px rgba(84, 160, 255, 0.9))
+          drop-shadow(0 0 30px rgba(84,  160, 255, 0.9))
           drop-shadow(0 0 50px rgba(255, 159, 243, 0.6));
 }
 
@@ -141,7 +141,7 @@ html:not(.dark) .VPNav {
   -webkit-text-fill-color: transparent;
   background-clip:         text;
   filter:                  drop-shadow(0 0 7px rgba(255, 107, 107, 0.45))
-                           drop-shadow(0 0 16px rgba(84, 160, 255, 0.3));
+                           drop-shadow(0 0 16px rgba(84,  160, 255, 0.3));
   animation:               rainbow 6s ease infinite, hero-glow 4s ease-in-out infinite;
 }
 
@@ -153,7 +153,7 @@ html:not(.dark) .VPNav {
 
 .VPHero .text {
   filter:    drop-shadow(0 0 7px rgba(255, 107, 107, 0.45))
-             drop-shadow(0 0 16px rgba(84, 160, 255, 0.3));
+             drop-shadow(0 0 16px rgba(84,  160, 255, 0.3));
   animation: hero-glow 4s ease-in-out infinite;
 }
 
@@ -224,21 +224,22 @@ html      { scroll-behavior: smooth; }
 }
 
 @keyframes heading-flash {
-  0%   { text-decoration-color: rgba(84, 160, 255, 1); }
+  0%   { text-decoration-color: rgba(84, 160, 255, 1);   }
   60%  { text-decoration-color: rgba(84, 160, 255, 0.4); }
-  100% { text-decoration-color: rgba(84, 160, 255, 0); }
+  100% { text-decoration-color: rgba(84, 160, 255, 0);   }
 }
 
 
 /* =============================================================
-   Hide reading progress on homepage
+   Reading progress — hidden on homepage
    ============================================================= */
 body:has(.VPHome) .rp-wrap {
   display: none !important;
 }
 
+
 /* =============================================================
-   Mobile local nav bar — frosted glass (mirrors main navbar)
+   Mobile local nav bar — frosted glass
    ============================================================= */
 .VPLocalNav {
   backdrop-filter:         blur(12px) !important;
@@ -254,27 +255,9 @@ html:not(.dark) .VPLocalNav {
   background: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* =============================================================
-   Mobile menu drawer — subtle frosted glass
-   ============================================================= */
-.VPScreenMenu,
-.VPScreen {
-  backdrop-filter:         blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
-}
-
-.dark .VPScreenMenu,
-.dark .VPScreen {
-  background: rgba(13, 13, 13, 0.6) !important;
-}
-
-html:not(.dark) .VPScreenMenu,
-html:not(.dark) .VPScreen {
-  background: rgba(255, 255, 255, 0.6) !important;
-}
 
 /* =============================================================
-   Mobile nav screen — frosted glass + styled items
+   Mobile nav screen — frosted glass
    ============================================================= */
 .VPNavScreen {
   backdrop-filter:         blur(6px) !important;
@@ -306,47 +289,11 @@ html:not(.dark) .VPNavScreenAppearance {
   border:     1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Equal padding for all top-level items */
-a.VPNavScreenMenuLink {
-  padding-top:    7px !important;
-  padding-bottom: 7px !important;
-  padding-left:   14px !important;
-}
-
-/* Button inside group — same height as link */
-.VPNavScreenMenuGroup .button {
-  padding-top:    7px !important;
-  padding-bottom: 7px !important;
-  padding-left:   14px !important;
-}
-
-
-
-/* Dropdown items */
+/* Consistent padding for all mobile nav items */
+a.VPNavScreenMenuLink,
+.VPNavScreenMenuGroup .button,
 .VPNavScreenMenuGroupLink {
-  padding-top:    6px !important;
-  padding-bottom: 6px !important;
-  padding-left:   14px !important;
-}
-
-/* =============================================================
-   Mobile nav — fix group button excess height
-   ============================================================= */
-.VPNavScreenMenuGroup .button {
   padding-top:    7px !important;
   padding-bottom: 7px !important;
-  line-height:    24px !important;
-  font-size:      14px !important;
-}
-
-/* =============================================================
-   Mobile nav — fix group height both states
-   ============================================================= */
-.VPNavScreenMenuGroup[data-v-956364f9] {
-  height: 40px !important;
-}
-
-.VPNavScreenMenuGroup.open[data-v-956364f9] {
-  height: auto !important;
-  padding-bottom: 10px !important;
+  padding-left:   14px !important;
 }

@@ -8,8 +8,8 @@ import { useRoute } from 'vitepress'
 import type { EnhanceAppContext } from 'vitepress'
 import mediumZoom from 'medium-zoom'
 
-// Plugin: NProgress
-import vitepressNprogress from 'vitepress-plugin-nprogress'
+// Plugin: NProgress page transition loading bar
+import vitepressNprogress           from 'vitepress-plugin-nprogress'
 import 'vitepress-plugin-nprogress/lib/css/index.css'
 
 // Components
@@ -17,23 +17,23 @@ import Breadcrumb      from './components/Breadcrumb.vue'
 import ReadingTime     from './components/ReadingTime.vue'
 import ReadingProgress from './components/ReadingProgress.vue'
 import CopyHeadingLink from './components/CopyHeadingLink.vue'
+import RickRoll        from './components/RickRoll.vue'
 
 // Global styles
 import './custom.css'
 
-// Re-initializes zoom on every route change so new images are picked up
+// Re-initializes medium-zoom on every route change so new images are picked up
 const ZoomSetup = {
   setup() {
     const route = useRoute()
-    const initZoom = () =>
-      mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
-    onMounted(() => nextTick(initZoom))
-    watch(() => route.path, () => nextTick(initZoom))
+    const init  = () => mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
+    onMounted(() => nextTick(init))
+    watch(() => route.path, () => nextTick(init))
   },
   render: () => null,
 }
 
-// Highlights the heading that matches current URL hash
+// Flashes an underline on the heading matching the current URL hash
 const HeadingHighlight = {
   setup() {
     const route = useRoute()
@@ -41,7 +41,7 @@ const HeadingHighlight = {
       document.querySelectorAll('.heading-highlighted').forEach(el =>
         el.classList.remove('heading-highlighted')
       )
-      const hash = decodeURIComponent(window.location.hash.slice(1))
+      const hash   = decodeURIComponent(window.location.hash.slice(1))
       if (!hash) return
       const target = document.getElementById(hash)
       if (!target) return
@@ -54,7 +54,8 @@ const HeadingHighlight = {
   render: () => null,
 }
 
-// Shows reading progress only on doc pages, not on homepage
+// ReadingProgress is hidden on the homepage via CSS (body:has(.VPHome) .rp-wrap)
+// but we also guard it here to avoid mounting on home
 const ProgressWrapper = {
   setup() {
     const route = useRoute()
@@ -70,6 +71,7 @@ export default {
 
   Layout() {
     return h(DefaultTheme.Layout, null, {
+      // Rendered above markdown content on every doc page
       'doc-before': () => h('div', { class: 'doc-tools' }, [
         h(Breadcrumb),
         h(ReadingTime),
@@ -77,8 +79,11 @@ export default {
         h(HeadingHighlight),
         h(CopyHeadingLink),
       ]),
-      // Reading progress badge — hidden on homepage
-      'layout-bottom': () => h(ProgressWrapper),
+      // Reading progress badge (bottom-right) — hidden on homepage by CSS
+      'layout-bottom': () => h('div', null, [
+        h(ProgressWrapper),
+        h(RickRoll),  // Easter egg: 20 clicks on hero logo → rickroll
+      ]),
     })
   },
 

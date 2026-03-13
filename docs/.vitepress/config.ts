@@ -27,40 +27,21 @@ const logoPath = resolveLogoPath()
 
 export default defineConfig({
 
-  // --- Site metadata ---
-  base:          '/shindo/',
-  title:         'Shindo Life Docs',
-  titleTemplate: ':title · Shindo Life',
-  description:   'Гайды, тир-листы и механики Shindo Life от ETEPHYM',
-
   // --- Build options ---
-  appearance:      'dark',
+  base:            '/shindo/',
+  appearance:      'dark',     // dark by default, user can toggle
   cleanUrls:       true,
   lastUpdated:     true,
   metaChunk:       true,
   ignoreDeadLinks: true,
 
-  // --- HTML <head> tags ---
-  head: [
-    ['link', { rel: 'icon', href: `/shindo${logoPath}` }],
-    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
-    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['link', { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
-    ['meta', { name: 'theme-color', content: '#0d0d0d' }],
-    ['meta', { property: 'og:type',        content: 'website'                                                  }],
-    ['meta', { property: 'og:title',       content: 'Shindo Life Docs'                                         }],
-    ['meta', { property: 'og:description', content: 'Гайды, тир-листы и механики Shindo Life от ETEPHYM'       }],
-  ],
-
-  // --- SEO sitemap (auto-generated on build) ---
-  sitemap: {
-    hostname: 'https://etephym.github.io/shindo/',
-  },
+  // --- SEO sitemap ---
+  sitemap: { hostname: 'https://etephym.github.io/shindo/' },
 
   // --- Markdown options ---
   markdown: {
-    lineNumbers:  true,
-    image:        { lazyLoading: true },
+    lineNumbers: true,
+    image: { lazyLoading: true },
   },
 
   // =============================================================
@@ -69,37 +50,49 @@ export default defineConfig({
   // =============================================================
   locales: {
 
-    // --- Root locale: Russian ---
+    // =========================================================
+    // Russian — default locale
+    // =========================================================
     root: {
-      label:       'Русский',
-      lang:        'ru-RU',
-      title:       'Shindo Life Docs',
-      description: 'Гайды, тир-листы и механики Shindo Life от ETEPHYM',
+      label:         'Русский',
+      lang:          'ru-RU',
+      title:         'Shindo Life Docs',
+      titleTemplate: ':title · Shindo Life',
+      description:   'Гайды, тир-листы и механики Shindo Life от ETEPHYM',
+
+      head: [
+        ['link', { rel: 'icon', href: `/shindo${logoPath}` }],
+        ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+        ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+        ['link', { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
+        ['meta', { name: 'theme-color',        content: '#0d0d0d'                                 }],
+        ['meta', { property: 'og:type',        content: 'website'                                 }],
+        ['meta', { property: 'og:title',       content: 'Shindo Life Docs'                        }],
+        ['meta', { property: 'og:description', content: 'Гайды, тир-листы и механики Shindo Life' }],
+      ],
 
       themeConfig: {
         logo:      logoPath,
         siteTitle: 'Shindo Life',
 
-        // --- Navigation bar ---
+        // Links removed — social icons already in top-right
         nav: [
-          { text: '🏠 Главная', link: '/' },
+          { text: '🏠 Главная', link: '/'      },
           {
             text: '📚 Контент',
             items: [
-              { text: '📖 Гайд',              link: '/guide' },
-              { text: '💡 Советы и фишки',    link: '/tips'  },
+              { text: '📖 Гайд',           link: '/guide' },
+              { text: '💡 Советы и фишки', link: '/tips'  },
             ],
           },
-          // Links category removed intentionally
         ],
 
-        // --- Sidebar ---
         sidebar: [
           {
             text: '📚 Страницы',
             items: [
-              { text: 'Гайд',             link: '/guide', badge: { type: 'tip',     text: 'Читать'  } },
-              { text: 'Советы и фишки',   link: '/tips',  badge: { type: 'warning', text: 'Важно'   } },
+              { text: 'Гайд',           link: '/guide', badge: { type: 'tip',     text: 'Читать' } },
+              { text: 'Советы и фишки', link: '/tips',  badge: { type: 'warning', text: 'Важно'  } },
             ],
           },
           {
@@ -107,17 +100,17 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Пассивки менторов', link: '/guide#mentor-passives'                                                    },
-              { text: 'Менторы',           link: '/guide#mentors',           badge: { type: 'tip',     text: 'Must Read' } },
-              { text: 'Rep Bonus',         link: '/guide#rep-bonus-stats'                                                      },
-              { text: 'Danger',            link: '/guide#danger'                                                               },
-              { text: 'Расы',              link: '/guide#races'                                                                 },
+              { text: 'Менторы',           link: '/guide#mentors',         badge: { type: 'tip',     text: 'Must Read' } },
+              { text: 'Rep Bonus',         link: '/guide#rep-bonus-stats'                                                    },
+              { text: 'Danger',            link: '/guide#danger'                                                             },
+              { text: 'Расы',              link: '/guide#races'                                                              },
             ],
           },
           {
             text: '💊 Предметы',
             collapsed: true,
             items: [
-              { text: 'Хилки',     link: '/guide#heals'    },
+              { text: 'Хилки',     link: '/guide#heals'     },
               { text: 'Throwable', link: '/guide#throwable' },
               { text: 'Weapons',   link: '/guide#weapons'   },
               { text: 'Companion', link: '/guide#companion' },
@@ -128,39 +121,45 @@ export default defineConfig({
             text: '🧪 Скиллы',
             collapsed: true,
             items: [
-              { text: 'Элементы',     link: '/guide#elements',      badge: { type: 'danger', text: 'S+' } },
-              { text: 'Kenjutsu',     link: '/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
-              { text: 'Sub Abilities', link: '/guide#sub-abilities'                                        },
-              { text: 'Sub Modes',    link: '/guide#sub-modes'                                             },
+              { text: 'Элементы',      link: '/guide#elements',      badge: { type: 'danger', text: 'S+' } },
+              { text: 'Kenjutsu',      link: '/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
+              { text: 'Sub Abilities', link: '/guide#sub-abilities'                                          },
+              { text: 'Sub Modes',     link: '/guide#sub-modes'                                              },
             ],
           },
           {
             text: '📋 Прочее',
             collapsed: true,
             items: [
-              { text: 'Термины',       link: '/guide#terms',    badge: { type: 'info',    text: 'Новичкам' } },
-              { text: 'Правила',       link: '/guide#shindo-rules'                                             },
-              { text: 'Баг слотов',   link: '/guide#slot-bug', badge: { type: 'warning', text: 'Важно'    } },
+              { text: 'Термины',      link: '/guide#terms',      badge: { type: 'info',    text: 'Новичкам' } },
+              { text: 'Правила',      link: '/guide#shindo-rules'                                              },
+              { text: 'Баг слотов',   link: '/guide#slot-bug',   badge: { type: 'warning', text: 'Важно'     } },
             ],
           },
         ],
 
-        // --- Table of contents ---
-        outline: {
-          level: [2, 3],
-          label: 'На этой странице',
+        outline:             { level: [2, 3], label: 'На этой странице' },
+        returnToTopLabel:    '↑ Наверх',
+        sidebarMenuLabel:    'Меню',
+        darkModeSwitchLabel: 'Тема',
+        externalLinkIcon:    true,
+
+        docFooter: { prev: '← Предыдущая', next: 'Следующая →' },
+
+        lastUpdated: {
+          text: 'Обновлено',
+          formatOptions: { dateStyle: 'long', timeStyle: 'short' },
         },
 
-        // --- Search ---
+        editLink: {
+          pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
+          text:    'Редактировать на GitHub',
+        },
+
         search: {
           provider: 'local',
           options: {
-            miniSearch: {
-              searchOptions: {
-                fuzzy:  0.2,
-                prefix: true,
-              },
-            },
+            miniSearch: { searchOptions: { fuzzy: 0.2, prefix: true } },
             translations: {
               button: { buttonText: 'Поиск', buttonAriaLabel: 'Поиск' },
               modal: {
@@ -168,51 +167,17 @@ export default defineConfig({
                 resetButtonTitle: 'Сбросить',
                 backButtonTitle:  'Закрыть',
                 noResultsText:    'Ничего не найдено по запросу',
-                footer: {
-                  selectText:   'Выбрать',
-                  navigateText: 'Навигация',
-                  closeText:    'Закрыть',
-                },
+                footer: { selectText: 'Выбрать', navigateText: 'Навигация', closeText: 'Закрыть' },
               },
             },
           },
         },
 
-        // --- Edit link ---
-
-        // --- Prev / Next ---
-        editLink: {
-          pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
-          text:    'Редактировать на GitHub',
-        },
-
-        docFooter: {
-          prev: '← Предыдущая',
-          next: 'Следующая →',
-        },
-
-        // --- Last updated ---
-        lastUpdated: {
-          text: 'Обновлено',
-          formatOptions: {
-            dateStyle: 'long',
-            timeStyle: 'short',
-          },
-        },
-
-        // --- UI labels ---
-        externalLinkIcon:    true,
-        returnToTopLabel:    '↑ Наверх',
-        sidebarMenuLabel:    'Меню',
-        darkModeSwitchLabel: 'Тема',
-
-        // --- Footer ---
         footer: {
           message:   'Сделано с ❤️ от ETEPHYM',
           copyright: 'Shindo Life Docs © 2026',
         },
 
-        // --- Social icons ---
         socialLinks: [
           { icon: 'github',   link: 'https://github.com/etephym/shindo'  },
           { icon: 'discord',  link: 'https://discord.gg/cmCpgkb5zq'       },
@@ -221,18 +186,22 @@ export default defineConfig({
       },
     },
 
-    // --- English locale: /en/ ---
+    // =========================================================
+    // English — soon
+    // To translate: fill docs/en/index.md, guide.md, tips.md
+    // =========================================================
     en: {
-      label:       'English',
-      lang:        'en-US',
-      title:       'Shindo Life Docs',
-      description: 'Guides, tier lists and mechanics for Shindo Life by ETEPHYM',
+      label:         'English',
+      lang:          'en-US',
+      link:          '/en/',
+      title:         'Shindo Life Docs',
+      titleTemplate: ':title · Shindo Life',
+      description:   'Guides, tier lists and mechanics for Shindo Life by ETEPHYM',
 
       themeConfig: {
         logo:      logoPath,
         siteTitle: 'Shindo Life',
 
-        // --- Navigation bar ---
         nav: [
           { text: '🏠 Home', link: '/en/' },
           {
@@ -242,10 +211,8 @@ export default defineConfig({
               { text: '💡 Tips & Tricks', link: '/en/tips'  },
             ],
           },
-          // Links category removed intentionally
         ],
 
-        // --- Sidebar ---
         sidebar: [
           {
             text: '📚 Pages',
@@ -258,11 +225,11 @@ export default defineConfig({
             text: '⚔️ Mechanics',
             collapsed: true,
             items: [
-              { text: 'Mentor Passives', link: '/en/guide#mentor-passives'                                                       },
+              { text: 'Mentor Passives', link: '/en/guide#mentor-passives'                                                },
               { text: 'Mentors',         link: '/en/guide#mentors',         badge: { type: 'tip',     text: 'Must Read' } },
-              { text: 'Rep Bonus',       link: '/en/guide#rep-bonus-stats'                                                       },
-              { text: 'Danger',          link: '/en/guide#danger'                                                                },
-              { text: 'Races',           link: '/en/guide#races'                                                                 },
+              { text: 'Rep Bonus',       link: '/en/guide#rep-bonus-stats'                                                },
+              { text: 'Danger',          link: '/en/guide#danger'                                                         },
+              { text: 'Races',           link: '/en/guide#races'                                                          },
             ],
           },
           {
@@ -280,8 +247,8 @@ export default defineConfig({
             text: '🧪 Skills',
             collapsed: true,
             items: [
-              { text: 'Elements',      link: '/en/guide#elements',       badge: { type: 'danger', text: 'S+' } },
-              { text: 'Kenjutsu',      link: '/en/guide#kenjutsu',       badge: { type: 'danger', text: 'S+' } },
+              { text: 'Elements',      link: '/en/guide#elements',      badge: { type: 'danger', text: 'S+' } },
+              { text: 'Kenjutsu',      link: '/en/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
               { text: 'Sub Abilities', link: '/en/guide#sub-abilities'                                          },
               { text: 'Sub Modes',     link: '/en/guide#sub-modes'                                              },
             ],
@@ -290,29 +257,35 @@ export default defineConfig({
             text: '📋 Other',
             collapsed: true,
             items: [
-              { text: 'Terms',        link: '/en/guide#terms',       badge: { type: 'info',    text: 'Beginners' } },
+              { text: 'Terms',        link: '/en/guide#terms',      badge: { type: 'info',    text: 'Beginners' } },
               { text: 'Shindo Rules', link: '/en/guide#shindo-rules'                                               },
-              { text: 'Slot Bug',     link: '/en/guide#slot-bug',    badge: { type: 'warning', text: 'Important' } },
+              { text: 'Slot Bug',     link: '/en/guide#slot-bug',   badge: { type: 'warning', text: 'Important'  } },
             ],
           },
         ],
 
-        // --- Table of contents ---
-        outline: {
-          level: [2, 3],
-          label: 'On this page',
+        outline:             { level: [2, 3], label: 'On this page' },
+        returnToTopLabel:    '↑ Back to top',
+        sidebarMenuLabel:    'Menu',
+        darkModeSwitchLabel: 'Theme',
+        externalLinkIcon:    true,
+
+        docFooter: { prev: '← Previous', next: 'Next →' },
+
+        lastUpdated: {
+          text: 'Updated',
+          formatOptions: { dateStyle: 'long', timeStyle: 'short' },
         },
 
-        // --- Search ---
+        editLink: {
+          pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
+          text:    'Edit this page on GitHub',
+        },
+
         search: {
           provider: 'local',
           options: {
-            miniSearch: {
-              searchOptions: {
-                fuzzy:  0.2,
-                prefix: true,
-              },
-            },
+            miniSearch: { searchOptions: { fuzzy: 0.2, prefix: true } },
             translations: {
               button: { buttonText: 'Search', buttonAriaLabel: 'Search' },
               modal: {
@@ -320,51 +293,17 @@ export default defineConfig({
                 resetButtonTitle: 'Reset',
                 backButtonTitle:  'Close',
                 noResultsText:    'No results for',
-                footer: {
-                  selectText:   'Select',
-                  navigateText: 'Navigate',
-                  closeText:    'Close',
-                },
+                footer: { selectText: 'Select', navigateText: 'Navigate', closeText: 'Close' },
               },
             },
           },
         },
 
-        // --- Edit link ---
-
-        // --- Prev / Next ---
-        editLink: {
-          pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
-          text:    'Edit this page on GitHub',
-        },
-
-        docFooter: {
-          prev: '← Previous',
-          next: 'Next →',
-        },
-
-        // --- Last updated ---
-        lastUpdated: {
-          text: 'Updated',
-          formatOptions: {
-            dateStyle: 'long',
-            timeStyle: 'short',
-          },
-        },
-
-        // --- UI labels ---
-        externalLinkIcon:    true,
-        returnToTopLabel:    '↑ Back to top',
-        sidebarMenuLabel:    'Menu',
-        darkModeSwitchLabel: 'Theme',
-
-        // --- Footer ---
         footer: {
           message:   'Made with ❤️ by ETEPHYM',
           copyright: 'Shindo Life Docs © 2026',
         },
 
-        // --- Social icons ---
         socialLinks: [
           { icon: 'github',   link: 'https://github.com/etephym/shindo'  },
           { icon: 'discord',  link: 'https://discord.gg/cmCpgkb5zq'       },
