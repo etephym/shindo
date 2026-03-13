@@ -94,7 +94,7 @@ function setupMusicPlayer() {
   document.addEventListener('mouseup',   () => dragEnd())
 
   widget.addEventListener('touchstart', e => dragStart(e.touches[0].clientX, e.touches[0].clientY), { passive: true })
-  document.addEventListener('touchmove', e => dragMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true })
+  document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); dragMove(e.touches[0].clientX, e.touches[0].clientY) } }, { passive: false })
   document.addEventListener('touchend',  () => dragEnd())
 
   btn.addEventListener('click', () => {
