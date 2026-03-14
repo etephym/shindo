@@ -89,12 +89,12 @@ h3:hover .copy-heading-btn              { color: rgba(84,160,255,0.5); }
   top:            -28px;
   left:           50%;
   transform:      translateX(-50%);
-  background:     rgba(13,13,13,0.9);
-  border:         1px solid rgba(84,160,255,0.3);
+  background:     var(--vp-c-bg-soft);
+  border:         1px solid var(--vp-c-divider);
   border-radius:  4px;
   padding:        2px 8px;
   font-size:      11px;
-  color:          #54a0ff;
+  color:          var(--vp-c-brand-1);
   white-space:    nowrap;
   opacity:        0;
   pointer-events: none;
