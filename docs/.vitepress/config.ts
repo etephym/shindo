@@ -29,7 +29,7 @@ export default defineConfig({
 
   // --- Build options ---
   base:            '/shindo/',
-  appearance:      'dark',     // dark by default, user can toggle
+  appearance:      true,        // respect user's saved preference; default falls back to OS preference
   cleanUrls:       true,
   lastUpdated:     true,
   metaChunk:       true,
@@ -61,6 +61,19 @@ export default defineConfig({
       description:   'Гайды, тир-листы и механики Shindo Life от ETEPHYM',
 
       head: [
+        // ── Тёмная тема по умолчанию при первом посещении ──────────────────
+        // Запускается до рендера страницы → нет "мигания" белым экраном.
+        // VitePress хранит выбор пользователя в localStorage под ключом
+        // 'vitepress-theme-appearance'. Если ключа ещё нет — ставим 'dark'.
+        ['script', {}, `
+          (function () {
+            var key = 'vitepress-theme-appearance';
+            if (!localStorage.getItem(key)) {
+              localStorage.setItem(key, 'dark');
+            }
+          })();
+        `],
+        // ───────────────────────────────────────────────────────────────────
         ['link', { rel: 'icon', href: `/shindo${logoPath}` }],
         ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
         ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
