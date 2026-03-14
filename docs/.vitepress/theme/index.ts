@@ -23,7 +23,7 @@ import './custom.css'
 function setupMusicPlayer(): void {
   if (document.getElementById('mp-root')) return
 
-  const audio = new Audio('/shindo/Zerofuturism - a coldcore ambient playlist.mp3')
+  const audio = new Audio(withBase('/Zerofuturism - a coldcore ambient playlist.mp3'))
   audio.loop   = true
   audio.volume = 0.5
   let playing  = false
@@ -128,7 +128,13 @@ function setupMusicPlayer(): void {
 const ZoomSetup = {
   setup() {
     const route = useRoute()
-    const init  = () => mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
+    let zoomInstance: ReturnType<typeof mediumZoom> | null = null
+
+    const init = () => {
+      zoomInstance?.detach()
+      zoomInstance = mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
+    }
+
     onMounted(() => nextTick(init))
     watch(() => route.path, () => nextTick(init))
   },

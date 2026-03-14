@@ -171,9 +171,9 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Пассивки менторов', link: '/guide#mentor-passives' },
-              { text: 'Менторы', link: '/guide#mentors', badge: { type: 'tip', text: 'Must Read' } },
-              { text: 'Rep Bonus', link: '/guide#rep-bonus-stats' },
-              { text: 'Danger', link: '/guide#danger' },
+              { text: 'Менторы', link: '/guide#mentors', badge: { type: 'tip', text: 'Рекомендуем' } },
+              { text: 'Бонус репутации', link: '/guide#rep-bonus-stats' },
+              { text: 'Механика Danger', link: '/guide#danger' },
               { text: 'Расы', link: '/guide#races' },
             ],
           },
@@ -182,10 +182,10 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Хилки', link: '/guide#heals' },
-              { text: 'Throwable', link: '/guide#throwable' },
-              { text: 'Weapons', link: '/guide#weapons' },
-              { text: 'Companion', link: '/guide#companion' },
-              { text: 'Martials', link: '/guide#martials' },
+              { text: 'Throwables', link: '/guide#throwable' },
+              { text: 'Оружие', link: '/guide#weapons' },
+              { text: 'Companions', link: '/guide#companion' },
+              { text: 'Боевые стили', link: '/guide#martials' },
             ],
           },
           {
