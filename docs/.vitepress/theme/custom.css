@@ -16,7 +16,7 @@
   --vp-c-bg:             #0d0d0d;
   --vp-c-bg-soft:        #141414;
   --vp-c-bg-mute:        #1a1a1a;
-  --vp-c-bg-alt:         #0d0d0d;
+  --vp-c-bg-alt:         #161618;
   --vp-nav-bg-color:     transparent;
   --vp-c-divider:        #222222;
   --vp-c-gutter:         #080808;
@@ -44,17 +44,8 @@ html.dark { background-color: #0d0d0d; }
 .dark .VPNav           { border-bottom: 1px solid #1f1f1f; background: rgba(13,13,13,0.4) !important; }
 html:not(.dark) .VPNav { background: rgba(255,255,255,0.4) !important; }
 
-/* =============================================================
-   Sidebar — frosted glass
-   ============================================================= */
-.VPSidebar {
-  min-height:              100dvh;
-  backdrop-filter:         blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.dark .VPSidebar           { background: rgba(13,13,13,0.95) !important; }
-html:not(.dark) .VPSidebar { background: rgba(255,255,255,0.92) !important; }
+/* Restore default VitePress sidebar background so it keeps
+   the standard left panel contrast in both themes. */
 
 /* =============================================================
    Mobile local nav — frosted glass
