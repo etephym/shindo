@@ -248,9 +248,7 @@ html:not(.dark) .mp-bars span { background: #2563eb; }
 
 /* VPMenu dropdown */
 .VPFlyout .menu {
-  transition: transform 0.25s !important;
-  opacity:    1 !important;
-  visibility: visible !important;
+  transition: opacity 0.25s, visibility 0.25s, transform 0.25s !important;
 }
 
 .VPMenu {
