@@ -29,9 +29,9 @@ async function copyToClipboard(text: string): Promise<boolean> {
 
 function init(): void {
   cleanup()
-  const copied = labelCopied.value
-  const title  = labelCopy.value
-  const aria   = labelAria.value
+  const copied = labelCopied()
+  const title  = labelCopy()
+  const aria   = labelAria()
 
   document.querySelectorAll<HTMLElement>('.vp-doc h2, .vp-doc h3').forEach(heading => {
     const id = heading.id
