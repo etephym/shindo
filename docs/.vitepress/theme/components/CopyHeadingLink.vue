@@ -92,7 +92,7 @@ h3:hover .copy-heading-btn              { color: rgba(84,160,255,0.5); }
   background:     #0d0d0d;
   border:         1px solid rgba(255,255,255,0.18);
   border-radius:  6px;
-  padding:        1px 10px;
+  padding:        2px 14px;
   font-size:      12px;
   font-weight:    600;
   color:          #ffffff;
