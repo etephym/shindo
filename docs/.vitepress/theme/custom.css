@@ -32,7 +32,16 @@ html:not(.dark) .VPNav { background: rgba(255,255,255,0.4) !important; }
 .dark .VPSidebar,
 .dark .VPSidebar.open,
 .dark .VPSidebar .curtain { background: #0a0a0b !important; }
-.dark .VPSidebar          { border-right: 1px solid #17171a; }
+.dark .VPSidebar {
+  border-right: 1px solid transparent;
+  animation: sidebar-border-glow 4s ease-in-out infinite;
+}
+
+@keyframes sidebar-border-glow {
+  0%,100% { border-right-color: rgba(84,160,255,0.25); }
+  33%     { border-right-color: rgba(255,107,107,0.25); }
+  66%     { border-right-color: rgba(255,159,243,0.25); }
+}
 
 /* VPLocalNav */
 .VPLocalNav { backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; }
