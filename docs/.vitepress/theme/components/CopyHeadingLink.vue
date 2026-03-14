@@ -86,16 +86,18 @@ h3:hover .copy-heading-btn              { color: rgba(84,160,255,0.5); }
 .copy-heading-btn::after {
   content:        attr(data-copied);
   position:       absolute;
-  top:            -28px;
+  top:            -32px;
   left:           50%;
   transform:      translateX(-50%);
-  background:     var(--vp-c-bg-soft);
+  background:     var(--vp-c-bg-elv);
   border:         1px solid var(--vp-c-divider);
-  border-radius:  4px;
-  padding:        2px 8px;
+  border-radius:  6px;
+  padding:        3px 10px;
   font-size:      11px;
+  font-weight:    600;
   color:          var(--vp-c-brand-1);
   white-space:    nowrap;
+  box-shadow:     0 2px 8px rgba(0,0,0,0.15);
   opacity:        0;
   pointer-events: none;
   transition:     opacity 0.2s ease;
