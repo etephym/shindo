@@ -76,6 +76,7 @@ function setupMusicPlayer() {
     root.style.right  = 'auto'
     root.style.left   = origLeft + 'px'
     root.style.top    = origTop  + 'px'
+    root.classList.add('dragging')
   }
 
   function dragMove(clientX, clientY) {
@@ -87,13 +88,20 @@ function setupMusicPlayer() {
     root.style.top  = Math.min(Math.max(0, origTop  + dy), window.innerHeight - root.offsetHeight) + 'px'
   }
 
-  function dragEnd() { dragging = false; root.style.transition = '' }
+  function dragEnd() { dragging = false; root.style.transition = ''; root.classList.remove('dragging') }
 
-  widget.addEventListener('mousedown',   e => dragStart(e.clientX, e.clientY))
+  widget.addEventListener('mousedown', e => {
+    // Не начинаем drag при клике на кнопку воспроизведения
+    if ((e.target as HTMLElement).closest('#mp-btn')) return
+    dragStart(e.clientX, e.clientY)
+  })
   document.addEventListener('mousemove', e => dragMove(e.clientX, e.clientY))
   document.addEventListener('mouseup',   () => dragEnd())
 
-  widget.addEventListener('touchstart', e => dragStart(e.touches[0].clientX, e.touches[0].clientY), { passive: true })
+  widget.addEventListener('touchstart', e => {
+    if ((e.target as HTMLElement).closest('#mp-btn')) return
+    dragStart(e.touches[0].clientX, e.touches[0].clientY)
+  }, { passive: true })
   document.addEventListener('touchmove', e => { if (dragging) { e.preventDefault(); dragMove(e.touches[0].clientX, e.touches[0].clientY) } }, { passive: false })
   document.addEventListener('touchend',  () => dragEnd())
 
@@ -164,6 +172,10 @@ export default {
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
     vitepressNprogress(ctx)
-    if (typeof window !== 'undefined') setupMusicPlayer()
+    // Запускаем плеер один раз — setTimeout(0) гарантирует,
+    // что DOM уже готов, а guard внутри setupMusicPlayer предотвращает дубли.
+    if (typeof window !== 'undefined') {
+      setTimeout(setupMusicPlayer, 0)
+    }
   },
 }

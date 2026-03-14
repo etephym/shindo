@@ -299,13 +299,15 @@ a.VPNavScreenMenuLink,
 }
 
 /* =============================================================
-   Mobile nav — fix group height (scoped to current VitePress build)
+   Mobile nav — fix group height
+   Примечание: data-v-* атрибуты меняются при каждом билде VitePress,
+   поэтому используем стабильный селектор по классу.
    ============================================================= */
-.VPNavScreenMenuGroup[data-v-956364f9] {
+.VPNavScreenMenuGroup {
   height: 40px !important;
 }
 
-.VPNavScreenMenuGroup.open[data-v-956364f9] {
+.VPNavScreenMenuGroup.open {
   height: auto !important;
   padding-bottom: 10px !important;
 }
@@ -344,6 +346,7 @@ a.VPNavScreenMenuLink,
   box-shadow:              0 4px 24px rgba(0,0,0,0.35);
   transition:              box-shadow 0.3s ease, border-color 0.3s ease;
   user-select:             none;
+  cursor:                  grab;
 }
 #mp-widget.playing {
   border-color: rgba(84,160,255,0.3);
@@ -374,6 +377,7 @@ html:not(.dark) #mp-widget.playing {
   touch-action:    manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+#mp-root.dragging #mp-widget { cursor: grabbing; }
 #mp-btn:hover  { background: rgba(84,160,255,0.28); transform: scale(1.08); }
 #mp-btn:active { transform: scale(0.95); }
 html:not(.dark) #mp-btn       { background: rgba(37,99,235,0.1);  color: #2563eb; }
