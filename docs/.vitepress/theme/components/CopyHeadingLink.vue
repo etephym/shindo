@@ -4,7 +4,7 @@ import { useRoute } from 'vitepress'
 
 const route = useRoute()
 
-const isEn        = computed(() => route.path.startsWith('/en/'))
+const isEn        = computed(() => document.documentElement.lang === 'en-US')
 const labelCopy   = computed(() => isEn.value ? 'Copy link'              : 'Скопировать ссылку')
 const labelAria   = computed(() => isEn.value ? 'Copy link to heading'   : 'Скопировать ссылку на заголовок')
 const labelCopied = computed(() => isEn.value ? 'Copied!'                : 'Скопировано!')
