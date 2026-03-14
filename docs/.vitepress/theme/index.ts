@@ -96,6 +96,7 @@ function setupMusicPlayer(): void {
     dragging = false
     root.style.transition = ''
     root.classList.remove('dragging')
+    setTimeout(() => { didDrag = false }, 0)
   }
 
   widget.addEventListener('mousedown', (e: MouseEvent) => {

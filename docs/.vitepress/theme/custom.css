@@ -320,3 +320,10 @@ html:not(.dark) .mp-bars span { background: #2563eb; }
     padding-right: 12px;
   }
 }
+
+/* =============================================================
+   Music Player — fixed text width to prevent resize on play/pause
+   ============================================================= */
+.mp-sub {
+  min-width: 110px;
+}
