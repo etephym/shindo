@@ -86,21 +86,28 @@ h3:hover .copy-heading-btn              { color: rgba(84,160,255,0.5); }
 .copy-heading-btn::after {
   content:        attr(data-copied);
   position:       absolute;
-  top:            -32px;
+  top:            -36px;
   left:           50%;
   transform:      translateX(-50%);
-  background:     var(--vp-c-bg-elv);
-  border:         1px solid var(--vp-c-divider);
-  border-radius:  6px;
-  padding:        3px 10px;
-  font-size:      11px;
+  background:     #0d0d0d;
+  border:         1px solid rgba(84,160,255,0.3);
+  border-radius:  8px;
+  padding:        5px 12px;
+  font-size:      12px;
   font-weight:    600;
-  color:          var(--vp-c-brand-1);
+  color:          #54a0ff;
   white-space:    nowrap;
-  box-shadow:     0 2px 8px rgba(0,0,0,0.15);
+  box-shadow:     0 4px 16px rgba(0,0,0,0.4), 0 0 8px rgba(84,160,255,0.1);
   opacity:        0;
   pointer-events: none;
   transition:     opacity 0.2s ease;
+}
+
+html:not(.dark) .copy-heading-btn::after {
+  background:  #ffffff;
+  border-color: rgba(37,99,235,0.25);
+  color:        #2563eb;
+  box-shadow:   0 4px 16px rgba(0,0,0,0.1), 0 0 8px rgba(37,99,235,0.08);
 }
 .copy-heading-btn.copied::after         { opacity: 1; }
 </style>
