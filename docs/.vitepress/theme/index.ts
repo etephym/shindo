@@ -1,6 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import { h, nextTick, onMounted, watch } from 'vue'
-import { useRoute, withBase } from 'vitepress'
+import { useRoute } from 'vitepress'
 import type { EnhanceAppContext } from 'vitepress'
 import mediumZoom from 'medium-zoom'
 

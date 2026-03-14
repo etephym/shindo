@@ -47,17 +47,6 @@ html:not(.dark) .VPNav { background: rgba(255,255,255,0.4) !important; }
 /* Restore default VitePress sidebar background so it keeps
    the standard left panel contrast in both themes. */
 
-
-.dark .VPSidebar,
-.dark .VPSidebar.open,
-.dark .VPSidebar .curtain {
-  background: #0a0a0b !important;
-}
-
-.dark .VPSidebar {
-  border-right: 1px solid #17171a;
-}
-
 /* =============================================================
    Mobile local nav — frosted glass
    ============================================================= */
@@ -237,13 +226,7 @@ body:has(.VPHome) .rp-wrap { display: none !important; }
 /* =============================================================
    Music Player
    ============================================================= */
-#mp-root {
-  position: fixed;
-  left: 24px;
-  bottom: calc(80px + var(--mp-visual-bottom-gap, 0px));
-  z-index: 999;
-  max-width: calc(100vw - 24px);
-}
+#mp-root { position: fixed; bottom: 80px; left: 24px; z-index: 999; }
 
 #mp-widget {
   display:                 flex;
@@ -307,16 +290,3 @@ html:not(.dark) .mp-bars span { background: #2563eb; }
 .mp-info  { display: flex; flex-direction: column; gap: 1px; }
 .mp-title { font-size: 13px; font-weight: 600; color: var(--vp-c-text-1); line-height: 1.3; }
 .mp-sub   { font-size: 11px; color: var(--vp-c-text-3); }
-
-
-@media (max-width: 640px) {
-  #mp-root {
-    left: 12px;
-    bottom: calc(72px + var(--mp-visual-bottom-gap, 0px));
-    max-width: calc(100vw - 24px);
-  }
-
-  #mp-widget {
-    padding-right: 12px;
-  }
-}
