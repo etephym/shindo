@@ -16,6 +16,8 @@ import Copyright       from './components/Copyright.vue'
 
 import './custom.css'
 
+const POS_KEY = 'mp-pos'
+
 function isRuPath(): boolean {
   return !window.location.pathname.includes('/en/')
 }
@@ -37,9 +39,9 @@ function setupMusicPlayer(): void {
   wrap.id = 'mp-root'
   wrap.innerHTML = [
     '<div id="mp-widget">',
-    `  <button id="mp-btn" title="${titlePlay}">`,
-    '    <svg id="mp-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>',
-    '    <span id="mp-icon-bars" style="display:none" class="mp-bars"><span></span><span></span><span></span><span></span></span>',
+    `  <button id="mp-btn" title="${titlePlay}" aria-label="${titlePlay}">`,
+    '    <svg id="mp-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>',
+    '    <span id="mp-icon-bars" style="display:none" class="mp-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>',
     '  </button>',
     '  <div class="mp-info">',
     '    <span class="mp-title">Zerofuturism</span>',
@@ -56,29 +58,37 @@ function setupMusicPlayer(): void {
   const widget   = document.getElementById('mp-widget')    as HTMLElement
   const root     = document.getElementById('mp-root')      as HTMLElement
 
+  // Restore saved position
+  try {
+    const saved = localStorage.getItem(POS_KEY)
+    if (saved) {
+      const { left, top } = JSON.parse(saved)
+      root.style.bottom = 'auto'
+      root.style.right  = 'auto'
+      root.style.left   = Math.min(left, window.innerWidth  - 200) + 'px'
+      root.style.top    = Math.min(top,  window.innerHeight - 80)  + 'px'
+    }
+  } catch { /* ignore */ }
+
   function setPlaying(val: boolean): void {
     playing                = val
     iconPlay.style.display = val ? 'none'        : 'block'
     iconBars.style.display = val ? 'inline-flex' : 'none'
     sub.textContent        = val ? labelPlaying  : labelIdle
     widget.classList.toggle('playing', val)
+    btn.setAttribute('aria-label', val ? (ru ? 'Пауза' : 'Pause') : titlePlay)
   }
 
   let dragging = false
   let didDrag  = false
-  let startX   = 0
-  let startY   = 0
-  let origLeft = 0
-  let origTop  = 0
+  let startX   = 0, startY = 0, origLeft = 0, origTop = 0
 
   function dragStart(clientX: number, clientY: number): void {
     const rect        = root.getBoundingClientRect()
     dragging          = true
     didDrag           = false
-    startX            = clientX
-    startY            = clientY
-    origLeft          = rect.left
-    origTop           = rect.top
+    startX            = clientX; startY   = clientY
+    origLeft          = rect.left; origTop = rect.top
     root.style.transition = 'none'
     root.style.bottom     = 'auto'
     root.style.right      = 'auto'
@@ -97,6 +107,14 @@ function setupMusicPlayer(): void {
   }
 
   function dragEnd(): void {
+    if (dragging) {
+      try {
+        localStorage.setItem(POS_KEY, JSON.stringify({
+          left: parseFloat(root.style.left),
+          top:  parseFloat(root.style.top),
+        }))
+      } catch { /* ignore */ }
+    }
     dragging = false
     root.style.transition = ''
     root.classList.remove('dragging')
@@ -132,7 +150,7 @@ const ZoomSetup = {
     let zoomInstance: ReturnType<typeof mediumZoom> | null = null
     const init = () => {
       zoomInstance?.detach()
-      zoomInstance = mediumZoom('.vp-doc img', { background: 'rgba(0,0,0,0.85)' })
+      zoomInstance = mediumZoom('.vp-doc img:not(.no-zoom)', { background: 'rgba(0,0,0,0.85)' })
     }
     onMounted(() => nextTick(init))
     watch(() => route.path, () => nextTick(init))
