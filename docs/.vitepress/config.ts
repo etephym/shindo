@@ -40,6 +40,9 @@ const footerMessage =
 
 const defaultThemeScript = `(function(){var k='vitepress-theme-appearance';if(!localStorage.getItem(k))localStorage.setItem(k,'dark');})()`
 
+// =============================================================
+// Shared <head> tags applied to both locales
+// =============================================================
 const sharedHead = [
   ['script', {}, defaultThemeScript],
   ['link', { rel: 'icon', href: `${BASE_PATH}${logoPath.replace(/^\//, '')}` }],
@@ -53,6 +56,9 @@ const defaultLogo = {
   light: '/logo2.png',
 } satisfies DefaultTheme.ThemeableImage
 
+// =============================================================
+// Theme config factory — shared between RU and EN locales
+// =============================================================
 function createThemeConfig(params: {
   nav: DefaultTheme.NavItem[]
   sidebar: DefaultTheme.Sidebar
@@ -123,6 +129,116 @@ function createThemeConfig(params: {
   }
 }
 
+// =============================================================
+// Sidebar definitions
+// =============================================================
+
+const sidebarRu: DefaultTheme.Sidebar = [
+  {
+    text: '📚 Страницы',
+    items: [
+      { text: 'Гайд',           link: '/guide', badge: { type: 'tip',     text: 'Читать' } },
+      { text: 'Советы и фишки', link: '/tips',  badge: { type: 'warning', text: 'Важно'  } },
+    ],
+  },
+  {
+    text: '⚔️ Механики',
+    collapsed: true,
+    items: [
+      { text: 'Пассивки менторов', link: '/guide#mentor-passives' },
+      { text: 'Менторы',           link: '/guide#mentors',         badge: { type: 'tip', text: 'Рекомендуем' } },
+      { text: 'Бонус репутации',   link: '/guide#rep-bonus-stats' },
+      { text: 'Механика Danger',   link: '/guide#danger' },
+      { text: 'Расы',              link: '/guide#races' },
+    ],
+  },
+  {
+    text: '💊 Предметы',
+    collapsed: true,
+    items: [
+      { text: 'Хилки',         link: '/guide#heals' },
+      { text: 'Throwables',    link: '/guide#throwable' },
+      { text: 'Оружие',        link: '/guide#weapons' },
+      { text: 'Companions',    link: '/guide#companion' },
+      { text: 'Боевые стили',  link: '/guide#martials' },
+    ],
+  },
+  {
+    text: '🧪 Скиллы',
+    collapsed: true,
+    items: [
+      { text: 'Элементы',      link: '/guide#elements',      badge: { type: 'danger', text: 'S+' } },
+      { text: 'Kenjutsu',      link: '/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
+      { text: 'Sub Abilities', link: '/guide#sub-abilities' },
+      { text: 'Sub Modes',     link: '/guide#sub-modes' },
+    ],
+  },
+  {
+    text: '📋 Прочее',
+    collapsed: true,
+    items: [
+      { text: 'Термины',    link: '/guide#terms',       badge: { type: 'info',    text: 'Новичкам' } },
+      { text: 'Правила',    link: '/guide#shindo-rules' },
+      { text: 'Баг слотов', link: '/guide#slot-bug',    badge: { type: 'warning', text: 'Важно'    } },
+    ],
+  },
+]
+
+const sidebarEn: DefaultTheme.Sidebar = [
+  {
+    text: '📚 Pages',
+    items: [
+      { text: 'Guide',         link: '/en/guide', badge: { type: 'tip',     text: 'Read'      } },
+      { text: 'Tips & Tricks', link: '/en/tips',  badge: { type: 'warning', text: 'Important' } },
+    ],
+  },
+  {
+    text: '⚔️ Mechanics',
+    collapsed: true,
+    items: [
+      { text: 'Mentor Passives', link: '/en/guide#mentor-passives' },
+      { text: 'Mentors',         link: '/en/guide#mentors',         badge: { type: 'tip', text: 'Must Read' } },
+      { text: 'Rep Bonus',       link: '/en/guide#rep-bonus-stats' },
+      { text: 'Danger',          link: '/en/guide#danger' },
+      { text: 'Races',           link: '/en/guide#races' },
+    ],
+  },
+  {
+    text: '💊 Items',
+    collapsed: true,
+    items: [
+      { text: 'Heals',     link: '/en/guide#heals' },
+      { text: 'Throwable', link: '/en/guide#throwable' },
+      { text: 'Weapons',   link: '/en/guide#weapons' },
+      { text: 'Companion', link: '/en/guide#companion' },
+      { text: 'Martials',  link: '/en/guide#martials' },
+    ],
+  },
+  {
+    text: '🧪 Skills',
+    collapsed: true,
+    items: [
+      { text: 'Elements',      link: '/en/guide#elements',      badge: { type: 'danger', text: 'S+' } },
+      { text: 'Kenjutsu',      link: '/en/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
+      { text: 'Sub Abilities', link: '/en/guide#sub-abilities' },
+      { text: 'Sub Modes',     link: '/en/guide#sub-modes' },
+    ],
+  },
+  {
+    text: '📋 Other',
+    collapsed: true,
+    items: [
+      { text: 'Terms',        link: '/en/guide#terms',       badge: { type: 'info',    text: 'Beginners'  } },
+      { text: 'Shindo Rules', link: '/en/guide#shindo-rules' },
+      { text: 'Slot Bug',     link: '/en/guide#slot-bug',    badge: { type: 'warning', text: 'Important'  } },
+    ],
+  },
+]
+
+// =============================================================
+// Main config
+// =============================================================
+
 export default defineConfig({
   base:        BASE_PATH,
   appearance:  true,
@@ -158,56 +274,7 @@ export default defineConfig({
             ],
           },
         ],
-        sidebar: [
-          {
-            text: '📚 Страницы',
-            items: [
-              { text: 'Гайд',           link: '/guide', badge: { type: 'tip',     text: 'Читать' } },
-              { text: 'Советы и фишки', link: '/tips',  badge: { type: 'warning', text: 'Важно'  } },
-            ],
-          },
-          {
-            text: '⚔️ Механики',
-            collapsed: true,
-            items: [
-              { text: 'Пассивки менторов', link: '/guide#mentor-passives' },
-              { text: 'Менторы',           link: '/guide#mentors',         badge: { type: 'tip',     text: 'Рекомендуем' } },
-              { text: 'Бонус репутации',   link: '/guide#rep-bonus-stats' },
-              { text: 'Механика Danger',   link: '/guide#danger' },
-              { text: 'Расы',              link: '/guide#races' },
-            ],
-          },
-          {
-            text: '💊 Предметы',
-            collapsed: true,
-            items: [
-              { text: 'Хилки',         link: '/guide#heals' },
-              { text: 'Throwables',    link: '/guide#throwable' },
-              { text: 'Оружие',        link: '/guide#weapons' },
-              { text: 'Companions',    link: '/guide#companion' },
-              { text: 'Боевые стили', link: '/guide#martials' },
-            ],
-          },
-          {
-            text: '🧪 Скиллы',
-            collapsed: true,
-            items: [
-              { text: 'Элементы',      link: '/guide#elements',      badge: { type: 'danger', text: 'S+' } },
-              { text: 'Kenjutsu',      link: '/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
-              { text: 'Sub Abilities', link: '/guide#sub-abilities' },
-              { text: 'Sub Modes',     link: '/guide#sub-modes' },
-            ],
-          },
-          {
-            text: '📋 Прочее',
-            collapsed: true,
-            items: [
-              { text: 'Термины',    link: '/guide#terms',       badge: { type: 'info',    text: 'Новичкам' } },
-              { text: 'Правила',    link: '/guide#shindo-rules' },
-              { text: 'Баг слотов', link: '/guide#slot-bug',    badge: { type: 'warning', text: 'Важно'    } },
-            ],
-          },
-        ],
+        sidebar: sidebarRu,
         outlineLabel:           'На этой странице',
         returnToTopLabel:       '↑ Наверх',
         sidebarMenuLabel:       'Меню',
@@ -251,56 +318,7 @@ export default defineConfig({
             ],
           },
         ],
-        sidebar: [
-          {
-            text: '📚 Pages',
-            items: [
-              { text: 'Guide',         link: '/en/guide', badge: { type: 'tip',     text: 'Read'      } },
-              { text: 'Tips & Tricks', link: '/en/tips',  badge: { type: 'warning', text: 'Important' } },
-            ],
-          },
-          {
-            text: '⚔️ Mechanics',
-            collapsed: true,
-            items: [
-              { text: 'Mentor Passives', link: '/en/guide#mentor-passives' },
-              { text: 'Mentors',         link: '/en/guide#mentors',         badge: { type: 'tip',     text: 'Must Read' } },
-              { text: 'Rep Bonus',       link: '/en/guide#rep-bonus-stats' },
-              { text: 'Danger',          link: '/en/guide#danger' },
-              { text: 'Races',           link: '/en/guide#races' },
-            ],
-          },
-          {
-            text: '💊 Items',
-            collapsed: true,
-            items: [
-              { text: 'Heals',     link: '/en/guide#heals' },
-              { text: 'Throwable', link: '/en/guide#throwable' },
-              { text: 'Weapons',   link: '/en/guide#weapons' },
-              { text: 'Companion', link: '/en/guide#companion' },
-              { text: 'Martials',  link: '/en/guide#martials' },
-            ],
-          },
-          {
-            text: '🧪 Skills',
-            collapsed: true,
-            items: [
-              { text: 'Elements',      link: '/en/guide#elements',      badge: { type: 'danger', text: 'S+' } },
-              { text: 'Kenjutsu',      link: '/en/guide#kenjutsu',      badge: { type: 'danger', text: 'S+' } },
-              { text: 'Sub Abilities', link: '/en/guide#sub-abilities' },
-              { text: 'Sub Modes',     link: '/en/guide#sub-modes' },
-            ],
-          },
-          {
-            text: '📋 Other',
-            collapsed: true,
-            items: [
-              { text: 'Terms',        link: '/en/guide#terms',       badge: { type: 'info',    text: 'Beginners'  } },
-              { text: 'Shindo Rules', link: '/en/guide#shindo-rules' },
-              { text: 'Slot Bug',     link: '/en/guide#slot-bug',    badge: { type: 'warning', text: 'Important'  } },
-            ],
-          },
-        ],
+        sidebar: sidebarEn,
         outlineLabel:           'On this page',
         returnToTopLabel:       '↑ Back to top',
         sidebarMenuLabel:       'Menu',

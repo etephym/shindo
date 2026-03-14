@@ -24,7 +24,7 @@ function onClick() {
 
 function attach() {
   detach()
-  const isHome = route.path === '/' || route.path === '/en/' || route.path === '/shindo/'
+  const isHome = route.path === '/' || route.path === '/en/'
   if (!isHome) return
   requestAnimationFrame(() => {
     target = document.querySelector('.VPHero .image-src')

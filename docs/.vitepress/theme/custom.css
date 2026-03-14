@@ -196,7 +196,7 @@ body:has(.VPHome) .rp-wrap { display: none !important; }
   position: fixed; left: 24px;
   bottom: calc(80px + var(--mp-visual-bottom-gap, 0px));
   z-index: 999; max-width: calc(100vw - 48px);
-  animation: mp-fade-in 0.5s 1s both;
+  animation: mp-fade-in 0.3s 0.1s both;
 }
 
 @keyframes mp-fade-in {

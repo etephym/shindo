@@ -136,4 +136,12 @@ export function setupMusicPlayer(): void {
 
   const langObserver = new MutationObserver(updateLabels)
   langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] })
+
+  const rootObserver = new MutationObserver(() => {
+    if (!document.getElementById('mp-root')) {
+      langObserver.disconnect()
+      rootObserver.disconnect()
+    }
+  })
+  rootObserver.observe(document.body, { childList: true })
 }

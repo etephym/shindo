@@ -1,5 +1,5 @@
 import DefaultTheme from 'vitepress/theme'
-import { h, nextTick, onMounted, watch } from 'vue'
+import { h, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vitepress'
 import type { EnhanceAppContext } from 'vitepress'
 import mediumZoom from 'medium-zoom'
@@ -35,6 +35,7 @@ const ZoomSetup = {
 const HeadingHighlight = {
   setup() {
     const route = useRoute()
+    let clearTimer: ReturnType<typeof setTimeout> | null = null
     const highlight = () => {
       document.querySelectorAll('.heading-highlighted').forEach(el =>
         el.classList.remove('heading-highlighted')
@@ -44,10 +45,12 @@ const HeadingHighlight = {
       const target = document.getElementById(hash)
       if (!target) return
       target.classList.add('heading-highlighted')
-      setTimeout(() => target.classList.remove('heading-highlighted'), 2500)
+      if (clearTimer) clearTimeout(clearTimer)
+      clearTimer = setTimeout(() => target.classList.remove('heading-highlighted'), 2500)
     }
     onMounted(() => nextTick(highlight))
     watch(() => route.hash, () => nextTick(highlight))
+    onUnmounted(() => { if (clearTimer) clearTimeout(clearTimer) })
   },
   render: () => null,
 }
