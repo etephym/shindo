@@ -43,9 +43,6 @@ const defaultThemeScript = `(function(){var k='vitepress-theme-appearance';if(!l
 const sharedHead: [string, Record<string, string>][] = [
   ['script', { children: defaultThemeScript } as never],
   ['link', { rel: 'icon', href: `${BASE_PATH}${logoPath.replace(/^\//, '')}` }],
-  ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
-  ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-  ['link', { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', rel: 'stylesheet' }],
   ['meta', { name: 'theme-color', content: '#0d0d0d' }],
   ['meta', { property: 'og:image', content: `${SITE_URL}${BASE_PATH}${logoPath.replace(/^\//, '')}` }],
 ]
