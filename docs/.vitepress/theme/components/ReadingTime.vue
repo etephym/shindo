@@ -26,7 +26,7 @@ const readingTime = ref(0)
 
 const route = useRoute()
 
-const isEn       = computed(() => route.path.startsWith('/en/'))
+const isEn       = computed(() => route.path.includes('/en/'))
 const labelWords = computed(() => isEn.value ? 'words'    : 'слов')
 const labelMin   = computed(() => isEn.value ? 'min read' : 'мин. чтения')
 

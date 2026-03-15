@@ -24,7 +24,7 @@ interface Crumb { text: string; link: string }
 // Locale detection
 // ---------------------------------------------------------------------------
 
-const isEn = computed(() => route.path.startsWith('/en/'))
+const isEn = computed(() => route.path.includes('/en/'))
 
 // ---------------------------------------------------------------------------
 // Segment label map — maps URL path segments to display names per locale

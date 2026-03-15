@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 
 import { onMounted, onUnmounted, watch } from 'vue'
-import { useRoute } from 'vitepress'
+import { useData, useRoute } from 'vitepress'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -15,10 +15,11 @@ const RESET_DELAY   = 10000 // ms — counter resets after this idle period
 const TARGET_URL    = 'https://youtu.be/dQw4w9WgXcQ?si=3-SKpSMGFYWdsQlA'
 
 // ---------------------------------------------------------------------------
-// Route
+// Route & site
 // ---------------------------------------------------------------------------
 
-const route = useRoute()
+const route    = useRoute()
+const { site } = useData()
 
 // ---------------------------------------------------------------------------
 // State
@@ -26,19 +27,28 @@ const route = useRoute()
 
 let count      = 0
 let resetTimer: ReturnType<typeof setTimeout> | null = null
-let active     = false // true only when on a home page
+let active     = false
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns true when the current page is a home page.
+ * route.path includes the base prefix (e.g. '/shindo/' or '/shindo/en/'),
+ * so we compare against base and base + 'en/' explicitly.
+ */
+function checkIsHome(): boolean {
+  const base = site.value.base // '/shindo/'
+  return route.path === base || route.path === `${base}en/`
+}
 
 // ---------------------------------------------------------------------------
 // Document-level click handler (event delegation)
-//
-// Instead of querying a specific element (which may be hidden or not yet
-// rendered), we listen on document and check whether the click originated
-// inside .VPHero. This works regardless of DOM structure, theme, or timing.
 // ---------------------------------------------------------------------------
 
 function onDocumentClick(e: MouseEvent): void {
   if (!active) return
-  // Only count clicks that land inside the hero section
   if (!(e.target as Element).closest('.VPHero')) return
 
   count++
@@ -56,17 +66,15 @@ function onDocumentClick(e: MouseEvent): void {
 // ---------------------------------------------------------------------------
 
 function activate(): void {
-  const isHome = route.path === '/' || route.path === '/en/'
-  active       = isHome
-  if (!isHome) {
-    // Reset counter when leaving home so it starts fresh on return
+  active = checkIsHome()
+  if (!active) {
     count = 0
     if (resetTimer) { clearTimeout(resetTimer); resetTimer = null }
   }
 }
 
 // ---------------------------------------------------------------------------
-// Lifecycle — single document listener, always attached, activation toggled
+// Lifecycle
 // ---------------------------------------------------------------------------
 
 onMounted(() => {
@@ -82,5 +90,4 @@ onUnmounted(() => {
 })
 </script>
 
-<!-- Render nothing visible — behaviour only -->
 <template><span aria-hidden="true" /></template>

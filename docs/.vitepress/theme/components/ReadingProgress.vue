@@ -27,7 +27,7 @@ const idle     = ref(false) // true after 3 s of no scrolling → shows arrow ic
 // ---------------------------------------------------------------------------
 
 const route = useRoute()
-const isEn  = computed(() => route.path.startsWith('/en/'))
+const isEn  = computed(() => route.path.includes('/en/'))
 
 /** Tooltip / aria-label text — switches between percentage and "back to top". */
 const titleLabel = computed(() =>

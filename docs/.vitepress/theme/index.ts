@@ -4,7 +4,7 @@
 
 import DefaultTheme from 'vitepress/theme'
 import { h, nextTick, onMounted, onUnmounted, watch } from 'vue'
-import { useRoute } from 'vitepress'
+import { useData, useRoute } from 'vitepress'
 import type { EnhanceAppContext } from 'vitepress'
 
 // ---------------------------------------------------------------------------
@@ -47,7 +47,7 @@ const ZoomSetup = {
 
     onMounted(() => nextTick(init))
     watch(() => route.path, () => nextTick(init))
-    onUnmounted(() => zoom?.detach()) // prevent memory leak on component destroy
+    onUnmounted(() => zoom?.detach())
   },
   render: () => null,
 }
@@ -63,7 +63,6 @@ const HeadingHighlight = {
     let clearTimer: ReturnType<typeof setTimeout> | null = null
 
     function highlight() {
-      // Remove any existing highlight before applying a new one
       document.querySelectorAll('.heading-highlighted').forEach(el =>
         el.classList.remove('heading-highlighted')
       )
@@ -90,9 +89,11 @@ const HeadingHighlight = {
 const ProgressWrapper = {
   name: 'ProgressWrapper',
   setup() {
-    const route = useRoute()
+    const route    = useRoute()
+    const { site } = useData()
     return () => {
-      const isHome = route.path === '/' || route.path === '/en/'
+      const base   = site.value.base
+      const isHome = route.path === base || route.path === `${base}en/`
       return isHome ? null : h(ReadingProgress)
     }
   },
@@ -105,10 +106,8 @@ const ProgressWrapper = {
 export default {
   extends: DefaultTheme,
 
-  // Inject components into named layout slots
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      // Above the document content: breadcrumb, reading time, and behaviour hooks
       'doc-before': () =>
         h('div', { class: 'doc-tools' }, [
           h(Breadcrumb),
@@ -117,9 +116,7 @@ export default {
           h(HeadingHighlight),
           h(CopyHeadingLink),
         ]),
-      // Below the document content: copyright notice
-      'doc-after': () => h(Copyright),
-      // Fixed overlay elements: scroll progress ring + rick-roll easter egg
+      'doc-after':     () => h(Copyright),
       'layout-bottom': () => h('div', null, [h(ProgressWrapper), h(RickRoll)]),
     })
   },
@@ -127,7 +124,6 @@ export default {
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
     vitepressNprogress(ctx)
-    // Music player is DOM-only — skip during SSR, defer until after first paint
     if (typeof window !== 'undefined') {
       requestAnimationFrame(setupMusicPlayer)
     }
