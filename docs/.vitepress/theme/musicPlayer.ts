@@ -1,76 +1,148 @@
-const POS_KEY = 'mp-pos'
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-function isRuPath(): boolean {
+const POS_KEY   = 'mp-pos'
+const AUDIO_SRC = '/shindo/Zerofuturism - a coldcore ambient playlist.mp3'
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+type Labels = { idle: string; playing: string; play: string; pause: string }
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Returns locale-specific UI strings based on the current URL path. */
+function getLabels(isRu: boolean): Labels {
+  return isRu
+    ? { idle: 'Фоновая музыка', playing: 'Играет...', play: 'Играть', pause: 'Пауза'  }
+    : { idle: 'Background music', playing: 'Playing...', play: 'Play', pause: 'Pause' }
+}
+
+/** True when the visitor is on the Russian locale (no /en/ in path). */
+function isRuLocale(): boolean {
   return !window.location.pathname.includes('/en/')
 }
+
+/** Clamps a number between min and max. */
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
+}
+
+// ---------------------------------------------------------------------------
+// Main setup — called once on app mount; guard prevents double-init
+// ---------------------------------------------------------------------------
 
 export function setupMusicPlayer(): void {
   if (document.getElementById('mp-root')) return
 
-  const ru           = isRuPath()
-  const labelIdle    = ru ? 'Фоновая музыка' : 'Background music'
-  const labelPlaying = ru ? 'Играет...'       : 'Playing...'
-  const titlePlay    = ru ? 'Играть'          : 'Play'
+  // ── Audio element ──────────────────────────────────────────────────────────
 
-  const audio = new Audio('/shindo/Zerofuturism - a coldcore ambient playlist.mp3')
-  audio.loop   = true
-  audio.volume = 0.5
-  let playing  = false
+  const audio   = new Audio(AUDIO_SRC)
+  audio.loop    = true
+  audio.volume  = 0.5
+  audio.preload = 'none' // do not download until the user presses Play
 
-  const wrap = document.createElement('div')
-  wrap.id = 'mp-root'
-  wrap.innerHTML = [
-    '<div id="mp-widget">',
-    `  <button id="mp-btn" title="${titlePlay}" aria-label="${titlePlay}">`,
-    '    <svg id="mp-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>',
-    '    <span id="mp-icon-bars" style="display:none" class="mp-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>',
-    '  </button>',
-    '  <div class="mp-info">',
-    '    <span class="mp-title">Zerofuturism</span>',
-    `    <span id="mp-sub" class="mp-sub">${labelIdle}</span>`,
-    '  </div>',
-    '</div>',
-  ].join('')
-  document.body.appendChild(wrap)
+  let isPlaying = false
 
+  // ── Build DOM ──────────────────────────────────────────────────────────────
+
+  const root = document.createElement('div')
+  root.id    = 'mp-root'
+  root.innerHTML =
+    '<div id="mp-widget">' +
+      '<button id="mp-btn" type="button">' +
+        '<svg id="mp-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+          '<polygon points="5,3 19,12 5,21"/>' +
+        '</svg>' +
+        '<span id="mp-icon-bars" style="display:none" class="mp-bars" aria-hidden="true">' +
+          '<span></span><span></span><span></span><span></span>' +
+        '</span>' +
+      '</button>' +
+      '<div class="mp-info">' +
+        '<span class="mp-title">Zerofuturism</span>' +
+        '<span id="mp-sub" class="mp-sub"></span>' +
+      '</div>' +
+    '</div>'
+
+  document.body.appendChild(root)
+
+  // Cache element references right after appending — they are guaranteed to exist
+  const widget   = document.getElementById('mp-widget')    as HTMLElement
   const btn      = document.getElementById('mp-btn')       as HTMLButtonElement
   const sub      = document.getElementById('mp-sub')       as HTMLSpanElement
   const iconPlay = document.getElementById('mp-icon-play') as HTMLElement
   const iconBars = document.getElementById('mp-icon-bars') as HTMLElement
-  const widget   = document.getElementById('mp-widget')    as HTMLElement
-  const root     = document.getElementById('mp-root')      as HTMLElement
+
+  // ── Restore saved drag position from localStorage ─────────────────────────
 
   try {
     const saved = localStorage.getItem(POS_KEY)
     if (saved) {
-      const { left, top } = JSON.parse(saved)
+      const { left, top } = JSON.parse(saved) as { left: number; top: number }
       root.style.bottom = 'auto'
       root.style.right  = 'auto'
-      root.style.left   = Math.min(left, window.innerWidth  - 200) + 'px'
-      root.style.top    = Math.min(top,  window.innerHeight - 80)  + 'px'
+      root.style.left   = clamp(left, 0, window.innerWidth  - 200) + 'px'
+      root.style.top    = clamp(top,  0, window.innerHeight - 80)  + 'px'
     }
-  } catch { /* ignore */ }
+  } catch { /* ignore corrupt / missing storage value */ }
 
-  function setPlaying(val: boolean): void {
-    playing                = val
-    iconPlay.style.display = val ? 'none'        : 'block'
-    iconBars.style.display = val ? 'inline-flex' : 'none'
-    sub.textContent        = val ? labelPlaying  : labelIdle
-    widget.classList.toggle('playing', val)
-    btn.setAttribute('aria-label', val ? (ru ? 'Пауза' : 'Pause') : titlePlay)
+  // ── Label helpers ──────────────────────────────────────────────────────────
+
+  /** Syncs all text and aria attributes to the current locale + play state. */
+  function applyLabels(): void {
+    const l        = getLabels(isRuLocale())
+    sub.textContent = isPlaying ? l.playing : l.idle
+    const btnLabel  = isPlaying ? l.pause   : l.play
+    btn.title       = btnLabel
+    btn.setAttribute('aria-label', btnLabel)
   }
 
+  applyLabels()
+
+  /** Switches play/pause visual state and updates labels. */
+  function setPlaying(val: boolean): void {
+    isPlaying              = val
+    iconPlay.style.display = val ? 'none'        : 'block'
+    iconBars.style.display = val ? 'inline-flex' : 'none'
+    widget.classList.toggle('playing', val)
+    applyLabels()
+  }
+
+  // ── Playback ───────────────────────────────────────────────────────────────
+
+  btn.addEventListener('click', () => {
+    if (didDrag) return // ignore click that follows a drag gesture
+    if (isPlaying) {
+      audio.pause()
+      setPlaying(false)
+    } else {
+      audio.play().catch(() => { setPlaying(false) }) // handle autoplay policy rejection
+      setPlaying(true)
+    }
+  })
+
+  // Reset visual state if the audio file fails to load
+  audio.addEventListener('error', () => { setPlaying(false) })
+
+  // ── Drag state ────────────────────────────────────────────────────────────
+
   let dragging = false
-  let didDrag  = false
-  let startX   = 0, startY = 0, origLeft = 0, origTop = 0
+  let didDrag  = false // true when pointer moved enough to count as a drag, not a click
+  let startX = 0, startY = 0, origLeft = 0, origTop = 0
 
   function dragStart(clientX: number, clientY: number): void {
-    const rect        = root.getBoundingClientRect()
-    dragging          = true
-    didDrag           = false
-    startX            = clientX; startY   = clientY
-    origLeft          = rect.left; origTop = rect.top
-    root.style.transition = 'none'
+    const rect            = root.getBoundingClientRect()
+    dragging              = true
+    didDrag               = false
+    startX                = clientX
+    startY                = clientY
+    origLeft              = rect.left
+    origTop               = rect.top
+    root.style.transition = 'none' // disable CSS transitions while dragging
     root.style.bottom     = 'auto'
     root.style.right      = 'auto'
     root.style.left       = origLeft + 'px'
@@ -82,66 +154,71 @@ export function setupMusicPlayer(): void {
     if (!dragging) return
     const dx = clientX - startX
     const dy = clientY - startY
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true
-    root.style.left = Math.min(Math.max(0, origLeft + dx), window.innerWidth  - root.offsetWidth)  + 'px'
-    root.style.top  = Math.min(Math.max(0, origTop  + dy), window.innerHeight - root.offsetHeight) + 'px'
+    // Mark as a drag only after the pointer moves more than 3 px
+    if (!didDrag && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) didDrag = true
+    // Clamp inside viewport bounds
+    root.style.left = clamp(origLeft + dx, 0, window.innerWidth  - root.offsetWidth)  + 'px'
+    root.style.top  = clamp(origTop  + dy, 0, window.innerHeight - root.offsetHeight) + 'px'
   }
 
   function dragEnd(): void {
-    if (dragging) {
-      try {
-        localStorage.setItem(POS_KEY, JSON.stringify({
-          left: parseFloat(root.style.left),
-          top:  parseFloat(root.style.top),
-        }))
-      } catch { /* ignore */ }
-    }
-    dragging = false
-    root.style.transition = ''
+    if (!dragging) return
+    dragging              = false
+    root.style.transition = '' // re-enable CSS transitions
     root.classList.remove('dragging')
-    setTimeout(() => { didDrag = false }, 0)
+    // Persist the new position so it survives page refreshes
+    try {
+      localStorage.setItem(POS_KEY, JSON.stringify({
+        left: parseFloat(root.style.left),
+        top:  parseFloat(root.style.top),
+      }))
+    } catch { /* ignore */ }
+    // Defer reset so the click handler can still read didDrag === true
+    requestAnimationFrame(() => { didDrag = false })
   }
 
+  // ── Mouse drag events ─────────────────────────────────────────────────────
+
   widget.addEventListener('mousedown', (e: MouseEvent) => {
-    if ((e.target as HTMLElement).closest('#mp-btn')) return
+    if ((e.target as HTMLElement).closest('#mp-btn')) return // let button handle its own clicks
     dragStart(e.clientX, e.clientY)
   })
+
   document.addEventListener('mousemove', (e: MouseEvent) => dragMove(e.clientX, e.clientY))
-  document.addEventListener('mouseup', () => dragEnd())
+  document.addEventListener('mouseup',   dragEnd)
+
+  // ── Touch drag events ─────────────────────────────────────────────────────
 
   widget.addEventListener('touchstart', (e: TouchEvent) => {
     if ((e.target as HTMLElement).closest('#mp-btn')) return
     dragStart(e.touches[0].clientX, e.touches[0].clientY)
   }, { passive: true })
+
   document.addEventListener('touchmove', (e: TouchEvent) => {
-    if (dragging) { e.preventDefault(); dragMove(e.touches[0].clientX, e.touches[0].clientY) }
+    if (!dragging) return
+    e.preventDefault() // prevent page scroll while dragging the widget
+    dragMove(e.touches[0].clientX, e.touches[0].clientY)
   }, { passive: false })
-  document.addEventListener('touchend', () => dragEnd())
 
-  btn.addEventListener('click', () => {
-    if (didDrag) return
-    if (playing) { audio.pause(); setPlaying(false) }
-    else         { audio.play().catch(() => {}); setPlaying(true) }
+  document.addEventListener('touchend', dragEnd)
+
+  // ── Locale change observer — updates labels when the user switches language
+  
+  const langObserver = new MutationObserver(applyLabels)
+  langObserver.observe(document.documentElement, {
+    attributes:      true,
+    attributeFilter: ['lang'],
   })
 
-  function updateLabels(): void {
-    const nowRu      = isRuPath()
-    const nowIdle    = nowRu ? 'Фоновая музыка' : 'Background music'
-    const nowPlaying = nowRu ? 'Играет...'       : 'Playing...'
-    const nowTitle   = nowRu ? (playing ? 'Пауза' : 'Играть') : (playing ? 'Pause' : 'Play')
-    sub.textContent  = playing ? nowPlaying : nowIdle
-    btn.title        = nowTitle
-    btn.setAttribute('aria-label', nowTitle)
-  }
+  // ── Self-cleanup when the widget is removed from the DOM ──────────────────
 
-  const langObserver = new MutationObserver(updateLabels)
-  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] })
-
-  const rootObserver = new MutationObserver(() => {
-    if (!document.getElementById('mp-root')) {
-      langObserver.disconnect()
-      rootObserver.disconnect()
-    }
+  const bodyObserver = new MutationObserver(() => {
+    if (document.getElementById('mp-root')) return
+    langObserver.disconnect()
+    bodyObserver.disconnect()
+    document.removeEventListener('mousemove', (e: MouseEvent) => dragMove(e.clientX, e.clientY))
+    document.removeEventListener('mouseup',   dragEnd)
+    document.removeEventListener('touchend',  dragEnd)
   })
-  rootObserver.observe(document.body, { childList: true })
+  bodyObserver.observe(document.body, { childList: true })
 }

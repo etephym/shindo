@@ -1,11 +1,23 @@
+// ---------------------------------------------------------------------------
+// Imports — VitePress / Vue core
+// ---------------------------------------------------------------------------
+
 import DefaultTheme from 'vitepress/theme'
 import { h, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vitepress'
 import type { EnhanceAppContext } from 'vitepress'
-import mediumZoom from 'medium-zoom'
 
+// ---------------------------------------------------------------------------
+// Imports — third-party plugins
+// ---------------------------------------------------------------------------
+
+import mediumZoom from 'medium-zoom'
 import vitepressNprogress from 'vitepress-plugin-nprogress'
 import 'vitepress-plugin-nprogress/lib/css/index.css'
+
+// ---------------------------------------------------------------------------
+// Imports — local modules and components
+// ---------------------------------------------------------------------------
 
 import { setupMusicPlayer } from './musicPlayer'
 
@@ -18,25 +30,38 @@ import Copyright       from './components/Copyright.vue'
 
 import './custom.css'
 
+// ---------------------------------------------------------------------------
+// ZoomSetup — attaches medium-zoom to all doc images; re-initialises on navigation
+// ---------------------------------------------------------------------------
+
 const ZoomSetup = {
   setup() {
     const route = useRoute()
-    let zoomInstance: ReturnType<typeof mediumZoom> | null = null
-    const init = () => {
-      zoomInstance?.detach()
-      zoomInstance = mediumZoom('.vp-doc img:not(.no-zoom)', { background: 'rgba(0,0,0,0.85)' })
+    let zoom: ReturnType<typeof mediumZoom> | null = null
+
+    function init() {
+      zoom?.detach()
+      zoom = mediumZoom('.vp-doc img:not(.no-zoom)', { background: 'rgba(0,0,0,0.85)' })
     }
+
     onMounted(() => nextTick(init))
     watch(() => route.path, () => nextTick(init))
+    onUnmounted(() => zoom?.detach()) // prevent memory leak on component destroy
   },
   render: () => null,
 }
+
+// ---------------------------------------------------------------------------
+// HeadingHighlight — underlines the hash-target heading for 2.5 s after navigation
+// ---------------------------------------------------------------------------
 
 const HeadingHighlight = {
   setup() {
     const route = useRoute()
     let clearTimer: ReturnType<typeof setTimeout> | null = null
-    const highlight = () => {
+
+    function highlight() {
+      // Remove any existing highlight before applying a new one
       document.querySelectorAll('.heading-highlighted').forEach(el =>
         el.classList.remove('heading-highlighted')
       )
@@ -48,12 +73,17 @@ const HeadingHighlight = {
       if (clearTimer) clearTimeout(clearTimer)
       clearTimer = setTimeout(() => target.classList.remove('heading-highlighted'), 2500)
     }
+
     onMounted(() => nextTick(highlight))
     watch(() => route.hash, () => nextTick(highlight))
     onUnmounted(() => { if (clearTimer) clearTimeout(clearTimer) })
   },
   render: () => null,
 }
+
+// ---------------------------------------------------------------------------
+// ProgressWrapper — renders ReadingProgress only on non-home pages
+// ---------------------------------------------------------------------------
 
 const ProgressWrapper = {
   setup() {
@@ -65,19 +95,28 @@ const ProgressWrapper = {
   },
 }
 
+// ---------------------------------------------------------------------------
+// Theme export
+// ---------------------------------------------------------------------------
+
 export default {
   extends: DefaultTheme,
 
+  // Inject components into named layout slots
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'doc-before': () => h('div', { class: 'doc-tools' }, [
-        h(Breadcrumb),
-        h(ReadingTime),
-        h(ZoomSetup),
-        h(HeadingHighlight),
-        h(CopyHeadingLink),
-      ]),
-      'doc-after':     () => h(Copyright),
+      // Above the document content: breadcrumb, reading time, and behaviour hooks
+      'doc-before': () =>
+        h('div', { class: 'doc-tools' }, [
+          h(Breadcrumb),
+          h(ReadingTime),
+          h(ZoomSetup),
+          h(HeadingHighlight),
+          h(CopyHeadingLink),
+        ]),
+      // Below the document content: copyright notice
+      'doc-after': () => h(Copyright),
+      // Fixed elements outside the document flow: scroll progress + easter egg
       'layout-bottom': () => h('div', null, [h(ProgressWrapper), h(RickRoll)]),
     })
   },
@@ -85,8 +124,9 @@ export default {
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
     vitepressNprogress(ctx)
+    // Music player is DOM-only; skip during SSR
     if (typeof window !== 'undefined') {
-      setTimeout(setupMusicPlayer, 0)
+      setupMusicPlayer()
     }
   },
 }

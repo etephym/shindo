@@ -1,37 +1,73 @@
 <script setup lang="ts">
+// ---------------------------------------------------------------------------
+// Imports
+// ---------------------------------------------------------------------------
+
 import { computed } from 'vue'
 import { useData, useRoute } from 'vitepress'
 
-const route  = useRoute()
+// ---------------------------------------------------------------------------
+// Route & site data
+// ---------------------------------------------------------------------------
+
+const route    = useRoute()
 const { site } = useData()
 
-type Crumb = { text: string; link: string }
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface Crumb { text: string; link: string }
+
+// ---------------------------------------------------------------------------
+// Locale detection
+// ---------------------------------------------------------------------------
 
 const isEn = computed(() => route.path.startsWith('/en/'))
 
-const segmentMap: Record<string, { ru: string; en: string }> = {
-  guide: { ru: 'Гайд',            en: 'Guide' },
-  tips:  { ru: 'Советы и фишки',  en: 'Tips & Tricks' },
-  en:    { ru: 'English',         en: 'English' },
+// ---------------------------------------------------------------------------
+// Segment label map — maps URL path segments to display names per locale
+// ---------------------------------------------------------------------------
+
+const SEGMENT_MAP: Record<string, { ru: string; en: string }> = {
+  guide: { ru: 'Гайд',           en: 'Guide'        },
+  tips:  { ru: 'Советы и фишки', en: 'Tips & Tricks' },
+  en:    { ru: 'English',        en: 'English'       },
 }
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Converts a raw URL path segment into a human-readable breadcrumb label. */
 function formatSegment(part: string): string {
-  const mapped = segmentMap[part.toLowerCase()]
-  if (mapped) return isEn.value ? mapped.en : mapped.ru
-  const normalized = decodeURIComponent(part.replace('.html', '')).replace(/[-_]+/g, ' ').trim()
-  if (!normalized) return part
-  return normalized.charAt(0).toUpperCase() + normalized.slice(1)
+  const entry = SEGMENT_MAP[part.toLowerCase()]
+  if (entry) return isEn.value ? entry.en : entry.ru
+  // Fallback: decode percent-encoding, replace hyphens/underscores, capitalise
+  const decoded = decodeURIComponent(part).replace(/[-_]+/g, ' ').trim()
+  if (!decoded) return part
+  return decoded.charAt(0).toUpperCase() + decoded.slice(1)
 }
+
+// ---------------------------------------------------------------------------
+// Computed breadcrumb list
+// ---------------------------------------------------------------------------
 
 const crumbs = computed<Crumb[]>(() => {
-  const base  = site.value.base
-  const parts = route.path.replace(base, '').split('/').filter(Boolean)
+  // Normalise base to always have a trailing slash
+  const base  = site.value.base.replace(/\/$/, '') + '/'
+  // Strip the base prefix, then split the remainder into segments
+  const clean = route.path.startsWith(base)
+    ? route.path.slice(base.length)
+    : route.path.replace(/^\//, '')
+
+  const parts  = clean.split('/').filter(Boolean)
   const result: Crumb[] = [{ text: isEn.value ? 'Home' : 'Главная', link: base }]
 
-  let path = base
+  let accumulated = base
   for (const part of parts) {
-    path += `${part}/`
-    result.push({ text: formatSegment(part), link: path })
+    accumulated += part + '/'
+    result.push({ text: formatSegment(part), link: accumulated })
   }
 
   return result
@@ -39,22 +75,35 @@ const crumbs = computed<Crumb[]>(() => {
 </script>
 
 <template>
+  <!-- Render only when there is more than just the home crumb -->
   <nav v-if="crumbs.length > 1" class="breadcrumb" aria-label="Breadcrumb">
     <span v-for="(crumb, i) in crumbs" :key="crumb.link">
       <a v-if="i < crumbs.length - 1" :href="crumb.link">{{ crumb.text }}</a>
       <span v-else class="current" aria-current="page">{{ crumb.text }}</span>
-      <span v-if="i < crumbs.length - 1" class="arrow" aria-hidden="true">›</span>
+      <span v-if="i < crumbs.length - 1" class="sep" aria-hidden="true">›</span>
     </span>
   </nav>
 </template>
 
 <style scoped>
+/* ── Breadcrumb container ────────────────────────────────────────────────── */
 .breadcrumb {
-  display: flex; align-items: center; flex-wrap: wrap;
-  font-size: 13px; color: var(--vp-c-text-3); margin-bottom: 10px;
+  display:       flex;
+  align-items:   center;
+  flex-wrap:     wrap;
+  gap:           2px;
+  font-size:     13px;
+  color:         var(--vp-c-text-3);
+  margin-bottom: 10px;
 }
-.breadcrumb a { color: var(--vp-c-text-2); text-decoration: none; transition: color 0.2s; }
+
+/* ── Links ───────────────────────────────────────────────────────────────── */
+.breadcrumb a       { color: var(--vp-c-text-2); text-decoration: none; transition: color 0.2s; }
 .breadcrumb a:hover { color: var(--vp-c-brand); }
+
+/* ── Active (last) segment ───────────────────────────────────────────────── */
 .current { color: var(--vp-c-text-1); font-weight: 500; }
-.arrow   { opacity: 0.4; margin: 0 6px; }
+
+/* ── Separator ───────────────────────────────────────────────────────────── */
+.sep { opacity: 0.4; margin: 0 4px; }
 </style>
