@@ -102,8 +102,9 @@ watch(() => route.path, () => {
   idle.value     = false
   lastScroll     = -1
   if (idleTimer) { clearTimeout(idleTimer); idleTimer = null }
-  // Wait for the new page's DOM to settle before measuring
-  requestAnimationFrame(() => { calcTotal(); update() })
+  // Double rAF: first frame lets Vue update the DOM, second lets the browser
+  // perform layout so getBoundingClientRect() returns accurate values
+  requestAnimationFrame(() => requestAnimationFrame(() => { calcTotal(); update() }))
 })
 
 onMounted(() => {

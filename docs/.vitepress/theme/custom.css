@@ -260,7 +260,6 @@ html:not(.dark) .VPHero .image-container .light { display: block; }
    Global misc
    --------------------------------------------------------------------------- */
 
-html      { scroll-behavior: smooth; }
 .vp-doc a { transition: color 0.2s; }
 
 /* ---------------------------------------------------------------------------

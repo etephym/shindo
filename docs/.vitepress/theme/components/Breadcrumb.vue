@@ -33,7 +33,6 @@ const isEn = computed(() => route.path.includes('/en/'))
 const SEGMENT_MAP: Record<string, { ru: string; en: string }> = {
   guide: { ru: 'Гайд',           en: 'Guide'        },
   tips:  { ru: 'Советы и фишки', en: 'Tips & Tricks' },
-  en:    { ru: 'English',        en: 'English'       },
 }
 
 // ---------------------------------------------------------------------------
@@ -61,7 +60,9 @@ const crumbs = computed<Crumb[]>(() => {
     ? route.path.slice(base.length)
     : route.path.replace(/^\//, '')
 
-  const parts  = clean.split('/').filter(Boolean)
+  // Filter out the bare 'en' locale prefix — it is a routing detail,
+  // not a meaningful page the user navigated to intentionally
+  const parts  = clean.split('/').filter(p => Boolean(p) && p !== 'en')
   const result: Crumb[] = [{ text: isEn.value ? 'Home' : 'Главная', link: base }]
 
   let accumulated = base

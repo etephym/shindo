@@ -182,13 +182,16 @@ export function setupMusicPlayer(): void {
     requestAnimationFrame(() => { didDrag = false })
   }
 
-  // ── Viewport resize — re-clamp widget position if it went off-screen ──────
+  // ── Viewport resize — re-clamp widget position so it never leaves the viewport
 
   function onResize(): void {
-    // Only re-clamp when the widget has been manually positioned (not CSS default)
-    if (!root.style.left) return
-    root.style.left = clamp(parseFloat(root.style.left), 0, window.innerWidth  - root.offsetWidth)  + 'px'
-    root.style.top  = clamp(parseFloat(root.style.top  || '0'), 0, window.innerHeight - root.offsetHeight) + 'px'
+    // Always read current position from the rendered box — works regardless of
+    // whether position was set via inline style or CSS default
+    const rect = root.getBoundingClientRect()
+    root.style.bottom = 'auto'
+    root.style.right  = 'auto'
+    root.style.left   = clamp(rect.left, 0, window.innerWidth  - root.offsetWidth)  + 'px'
+    root.style.top    = clamp(rect.top,  0, window.innerHeight - root.offsetHeight) + 'px'
   }
 
   // ── Mouse drag events ─────────────────────────────────────────────────────
