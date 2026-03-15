@@ -116,15 +116,15 @@ export default {
         ]),
       // Below the document content: copyright notice
       'doc-after': () => h(Copyright),
-      // Fixed elements outside the document flow: scroll progress + easter egg
-      'layout-bottom': () => h('div', null, [h(ProgressWrapper), h(RickRoll)]),
+      // Fixed overlay elements: scroll progress ring + rick-roll easter egg
+      'layout-bottom': () => [h(ProgressWrapper), h(RickRoll)],
     })
   },
 
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
     vitepressNprogress(ctx)
-    // Music player is DOM-only — skip during SSR, defer until body is ready
+    // Music player is DOM-only — skip during SSR, defer until after first paint
     if (typeof window !== 'undefined') {
       requestAnimationFrame(setupMusicPlayer)
     }

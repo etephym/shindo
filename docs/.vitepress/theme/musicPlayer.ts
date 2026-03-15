@@ -112,6 +112,12 @@ export function setupMusicPlayer(): void {
     applyLabels()
   }
 
+  // ── Drag state — declared before any event listeners that reference them ───
+
+  let dragging = false
+  let didDrag  = false // true when pointer moved > 3px — prevents ghost click after drag
+  let startX = 0, startY = 0, origLeft = 0, origTop = 0
+
   // ── Playback ───────────────────────────────────────────────────────────────
 
   btn.addEventListener('click', () => {
@@ -130,11 +136,7 @@ export function setupMusicPlayer(): void {
   // Reset visual state if the audio file fails to load at any point
   audio.addEventListener('error', () => { setPlaying(false) })
 
-  // ── Drag state ────────────────────────────────────────────────────────────
-
-  let dragging = false
-  let didDrag  = false // true when pointer moved > 3px — prevents ghost click after drag
-  let startX = 0, startY = 0, origLeft = 0, origTop = 0
+  // ── Drag helpers ──────────────────────────────────────────────────────────
 
   function dragStart(clientX: number, clientY: number): void {
     const rect            = root.getBoundingClientRect()
@@ -186,15 +188,9 @@ export function setupMusicPlayer(): void {
     dragStart(e.clientX, e.clientY)
   })
 
-  // Store named references — required for removeEventListener to match the original handler
+  // Named references required — anonymous functions cannot be removed with removeEventListener
   const onMouseMove = (e: MouseEvent) => dragMove(e.clientX, e.clientY)
   const onMouseUp   = ()              => dragEnd()
-  const onTouchMove = (e: TouchEvent) => {
-    if (!dragging) return
-    e.preventDefault() // prevent page scroll while dragging the widget
-    dragMove(e.touches[0].clientX, e.touches[0].clientY)
-  }
-  const onTouchEnd  = () => dragEnd()
 
   document.addEventListener('mousemove', onMouseMove)
   document.addEventListener('mouseup',   onMouseUp)
@@ -205,6 +201,13 @@ export function setupMusicPlayer(): void {
     if ((e.target as HTMLElement).closest('#mp-btn')) return
     dragStart(e.touches[0].clientX, e.touches[0].clientY)
   }, { passive: true })
+
+  const onTouchMove = (e: TouchEvent) => {
+    if (!dragging) return
+    e.preventDefault() // prevent page scroll while dragging the widget
+    dragMove(e.touches[0].clientX, e.touches[0].clientY)
+  }
+  const onTouchEnd = () => dragEnd()
 
   document.addEventListener('touchmove', onTouchMove, { passive: false })
   document.addEventListener('touchend',  onTouchEnd)

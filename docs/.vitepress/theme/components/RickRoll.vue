@@ -13,6 +13,8 @@ import { useRoute } from 'vitepress'
 const CLICKS_NEEDED = 7     // number of clicks required to trigger the redirect
 const RESET_DELAY   = 10000 // ms — click counter resets after this idle period
 const TARGET_URL    = 'https://youtu.be/dQw4w9WgXcQ?si=3-SKpSMGFYWdsQlA'
+const MAX_RETRIES   = 20    // max rAF retries while waiting for VPHero to render
+const RETRY_DELAY   = 50    // ms between retries via setTimeout fallback
 
 // ---------------------------------------------------------------------------
 // Route
@@ -25,7 +27,8 @@ const route = useRoute()
 // ---------------------------------------------------------------------------
 
 let count      = 0
-let resetTimer: ReturnType<typeof setTimeout> | null = null
+let resetTimer: ReturnType<typeof setTimeout>  | null = null
+let retryTimer: ReturnType<typeof setTimeout>  | null = null
 let target:    Element | null = null
 
 // ---------------------------------------------------------------------------
@@ -48,24 +51,36 @@ function onClick(): void {
 // Attach / detach — only active on home pages
 // ---------------------------------------------------------------------------
 
+/**
+ * Tries to find .VPHero .image-src and attach the click listener.
+ * Retries up to MAX_RETRIES times with RETRY_DELAY ms gaps because
+ * layout-bottom mounts before VPHero finishes rendering its image.
+ */
+function tryAttach(retriesLeft: number): void {
+  const el = document.querySelector('.VPHero .image-src')
+  if (el) {
+    target = el
+    target.addEventListener('click', onClick)
+    ;(target as HTMLElement).style.cursor = 'pointer'
+    return
+  }
+  if (retriesLeft <= 0) return
+  retryTimer = setTimeout(() => tryAttach(retriesLeft - 1), RETRY_DELAY)
+}
+
 function attach(): void {
   detach() // always clean up before re-attaching
   const isHome = route.path === '/' || route.path === '/en/'
   if (!isHome) return
-  // Wait for the hero image to render before querying the DOM
-  requestAnimationFrame(() => {
-    target = document.querySelector('.VPHero .image-src')
-    if (!target) return
-    target.addEventListener('click', onClick)
-    ;(target as HTMLElement).style.cursor = 'pointer'
-  })
+  tryAttach(MAX_RETRIES)
 }
 
 function detach(): void {
-  if (target) {
-    target.removeEventListener('click', onClick)
-    target = null
-  }
+  // Cancel any pending retry
+  if (retryTimer) { clearTimeout(retryTimer); retryTimer = null }
+  // Remove listener from the previously found target
+  if (target) { target.removeEventListener('click', onClick); target = null }
+  // Cancel click counter reset timer
   if (resetTimer) { clearTimeout(resetTimer); resetTimer = null }
   count = 0
 }
@@ -75,7 +90,7 @@ function detach(): void {
 // ---------------------------------------------------------------------------
 
 onMounted(attach)
-watch(() => route.path, attach) // re-attach when navigating between home and doc pages
+watch(() => route.path, attach) // re-attach when navigating between pages
 onUnmounted(detach)
 </script>
 

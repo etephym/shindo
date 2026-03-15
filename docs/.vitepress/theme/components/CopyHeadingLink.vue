@@ -34,13 +34,15 @@ const labelCopied = () => isEn.value ? 'Copied!'              : 'Скопиро�
 // ---------------------------------------------------------------------------
 
 interface Handler { el: HTMLElement; fn: () => void }
-let handlers: Handler[] = []
+let handlers:    Handler[] = []
+let copiedTimer: ReturnType<typeof setTimeout> | null = null
 
 // ---------------------------------------------------------------------------
 // Cleanup — removes all injected buttons and detaches their listeners
 // ---------------------------------------------------------------------------
 
 function cleanup(): void {
+  if (copiedTimer) { clearTimeout(copiedTimer); copiedTimer = null }
   for (const { el, fn } of handlers) el.removeEventListener('click', fn)
   handlers = []
   document.querySelectorAll('.copy-heading-btn').forEach(el => el.remove())
@@ -93,7 +95,11 @@ function init(): void {
       const ok = await copyText(`${base}#${id}`)
       if (!ok) return
       btn.classList.add('copied')
-      setTimeout(() => btn.classList.remove('copied'), 1800)
+      if (copiedTimer) clearTimeout(copiedTimer)
+      copiedTimer = setTimeout(() => {
+        btn.classList.remove('copied')
+        copiedTimer = null
+      }, 1800)
     }
 
     btn.addEventListener('click', fn)
