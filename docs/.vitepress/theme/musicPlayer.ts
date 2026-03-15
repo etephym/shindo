@@ -70,7 +70,7 @@ export function setupMusicPlayer(): void {
 
   document.body.appendChild(root)
 
-  // Cache element references right after appending — they are guaranteed to exist
+  // Cache element references right after appending — guaranteed to exist
   const widget   = document.getElementById('mp-widget')    as HTMLElement
   const btn      = document.getElementById('mp-btn')       as HTMLButtonElement
   const sub      = document.getElementById('mp-sub')       as HTMLSpanElement
@@ -94,7 +94,7 @@ export function setupMusicPlayer(): void {
 
   /** Syncs all text and aria attributes to the current locale + play state. */
   function applyLabels(): void {
-    const l        = getLabels(isRuLocale())
+    const l         = getLabels(isRuLocale())
     sub.textContent = isPlaying ? l.playing : l.idle
     const btnLabel  = isPlaying ? l.pause   : l.play
     btn.title       = btnLabel
@@ -115,23 +115,25 @@ export function setupMusicPlayer(): void {
   // ── Playback ───────────────────────────────────────────────────────────────
 
   btn.addEventListener('click', () => {
-    if (didDrag) return // ignore click that follows a drag gesture
+    if (didDrag) return // ignore click that immediately follows a drag gesture
+
     if (isPlaying) {
       audio.pause()
       setPlaying(false)
     } else {
-      audio.play().catch(() => { setPlaying(false) }) // handle autoplay policy rejection
+      // Set playing optimistically, revert on error (e.g. autoplay policy block)
       setPlaying(true)
+      audio.play().catch(() => { setPlaying(false) })
     }
   })
 
-  // Reset visual state if the audio file fails to load
+  // Reset visual state if the audio file fails to load at any point
   audio.addEventListener('error', () => { setPlaying(false) })
 
   // ── Drag state ────────────────────────────────────────────────────────────
 
   let dragging = false
-  let didDrag  = false // true when pointer moved enough to count as a drag, not a click
+  let didDrag  = false // true when pointer moved > 3px — prevents ghost click after drag
   let startX = 0, startY = 0, origLeft = 0, origTop = 0
 
   function dragStart(clientX: number, clientY: number): void {
@@ -180,12 +182,17 @@ export function setupMusicPlayer(): void {
   // ── Mouse drag events ─────────────────────────────────────────────────────
 
   widget.addEventListener('mousedown', (e: MouseEvent) => {
-    if ((e.target as HTMLElement).closest('#mp-btn')) return // let button handle its own clicks
+    if ((e.target as HTMLElement).closest('#mp-btn')) return
     dragStart(e.clientX, e.clientY)
   })
 
-  document.addEventListener('mousemove', (e: MouseEvent) => dragMove(e.clientX, e.clientY))
-  document.addEventListener('mouseup',   dragEnd)
+  // Store references so the same function instances can be removed on cleanup
+  const onMouseMove = (e: MouseEvent)  => dragMove(e.clientX, e.clientY)
+  const onMouseUp   = ()               => dragEnd()
+  const onTouchEnd  = ()               => dragEnd()
+
+  document.addEventListener('mousemove', onMouseMove)
+  document.addEventListener('mouseup',   onMouseUp)
 
   // ── Touch drag events ─────────────────────────────────────────────────────
 
@@ -200,10 +207,10 @@ export function setupMusicPlayer(): void {
     dragMove(e.touches[0].clientX, e.touches[0].clientY)
   }, { passive: false })
 
-  document.addEventListener('touchend', dragEnd)
+  document.addEventListener('touchend', onTouchEnd)
 
-  // ── Locale change observer — updates labels when the user switches language
-  
+  // ── Locale observer — updates labels when the user switches language ───────
+
   const langObserver = new MutationObserver(applyLabels)
   langObserver.observe(document.documentElement, {
     attributes:      true,
@@ -211,14 +218,15 @@ export function setupMusicPlayer(): void {
   })
 
   // ── Self-cleanup when the widget is removed from the DOM ──────────────────
+  // Uses named function references so removeEventListener actually works
 
   const bodyObserver = new MutationObserver(() => {
     if (document.getElementById('mp-root')) return
     langObserver.disconnect()
     bodyObserver.disconnect()
-    document.removeEventListener('mousemove', (e: MouseEvent) => dragMove(e.clientX, e.clientY))
-    document.removeEventListener('mouseup',   dragEnd)
-    document.removeEventListener('touchend',  dragEnd)
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup',   onMouseUp)
+    document.removeEventListener('touchend',  onTouchEnd)
   })
   bodyObserver.observe(document.body, { childList: true })
 }

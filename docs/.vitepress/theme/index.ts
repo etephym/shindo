@@ -124,9 +124,9 @@ export default {
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
     vitepressNprogress(ctx)
-    // Music player is DOM-only; skip during SSR
+    // Music player is DOM-only — skip during SSR, defer until body is ready
     if (typeof window !== 'undefined') {
-      setupMusicPlayer()
+      requestAnimationFrame(setupMusicPlayer)
     }
   },
 }
