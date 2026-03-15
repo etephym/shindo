@@ -1,3 +1,1 @@
-# Hide generated and data files from language stats
-package-lock.json linguist-generated=true
-docs/public/** linguist-binary=true
+* text=auto eol=lf
