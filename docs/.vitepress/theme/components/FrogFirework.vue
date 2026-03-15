@@ -10,10 +10,11 @@ import { useData, useRoute } from 'vitepress'
 // Constants
 // ---------------------------------------------------------------------------
 
-const HOLD_DURATION = 2000  // ms — hold time required to trigger
+const HOLD_DURATION = 2000
 const FROG_EMOJI    = '🐸'
-const FROG_COUNT    = 18    // number of frogs in the firework
-const FROG_DURATION = 1200  // ms — animation duration per frog
+const FROG_COUNT    = 24
+const WAVE_COUNT    = 3     // firework fires in multiple waves
+const WAVE_DELAY    = 180   // ms between waves
 
 // ---------------------------------------------------------------------------
 // Route & site
@@ -23,13 +24,13 @@ const route    = useRoute()
 const { site } = useData()
 
 // ---------------------------------------------------------------------------
-// State — plain vars, no reactivity needed
+// State
 // ---------------------------------------------------------------------------
 
-let active      = false  // true only on home pages
-let holdTimer:    ReturnType<typeof setTimeout>  | null = null
-let retryTimer:   ReturnType<typeof setTimeout>  | null = null
-let target:       HTMLElement | null = null
+let active     = false
+let holdTimer:  ReturnType<typeof setTimeout> | null = null
+let retryTimer: ReturnType<typeof setTimeout> | null = null
+let target:     HTMLElement | null = null
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -40,69 +41,104 @@ function checkIsHome(): boolean {
   return route.path === base || route.path === `${base}en/`
 }
 
+function easeOut(t: number): number {
+  return 1 - Math.pow(1 - t, 3)
+}
+
 // ---------------------------------------------------------------------------
-// Firework — spawns FROG_COUNT emoji bursting outward from the logo center
+// Single frog particle
+// ---------------------------------------------------------------------------
+
+function spawnFrog(
+  startX: number,
+  startY: number,
+  angle:  number,
+  wave:   number,
+): void {
+  const frog = document.createElement('span')
+  frog.textContent = FROG_EMOJI
+  frog.setAttribute('aria-hidden', 'true')
+
+  const distance  = 100 + Math.random() * 160
+  const dx        = Math.cos(angle) * distance
+  const dy        = Math.sin(angle) * distance
+  const size      = 18 + Math.random() * 20
+  const duration  = 900 + Math.random() * 400
+  const delay     = wave * WAVE_DELAY + Math.random() * 60
+  const rotate    = (Math.random() - 0.5) * 720  // spin up to 2 full rotations
+  const wobble    = (Math.random() - 0.5) * 30   // lateral wobble
+
+  Object.assign(frog.style, {
+    position:      'fixed',
+    left:          `${startX}px`,
+    top:           `${startY}px`,
+    fontSize:      `${size}px`,
+    lineHeight:    '1',
+    pointerEvents: 'none',
+    userSelect:    'none',
+    zIndex:        '99999',
+    transform:     'translate(-50%, -50%)',
+    '--dx':        `${dx + wobble}px`,
+    '--dy':        `${dy}px`,
+    '--rot':       `${rotate}deg`,
+    animation:     `frog-burst ${duration}ms cubic-bezier(0.2,0.8,0.4,1) ${delay}ms forwards`,
+  })
+
+  document.body.appendChild(frog)
+  setTimeout(() => frog.remove(), duration + delay + 100)
+}
+
+// ---------------------------------------------------------------------------
+// Firework — finds the visible img element to get accurate bounds
 // ---------------------------------------------------------------------------
 
 function launchFirework(): void {
   if (!target) return
 
-  const rect = target.getBoundingClientRect()
+  // Find the currently VISIBLE image (dark or light — whichever is displayed)
+  const imgs = target.querySelectorAll<HTMLImageElement>('img.image-src')
+  let imgEl: HTMLImageElement | null = null
+  for (const img of imgs) {
+    const computed = window.getComputedStyle(img)
+    if (computed.display !== 'none' && computed.visibility !== 'hidden') {
+      imgEl = img
+      break
+    }
+  }
+
+  // Fallback to container if no visible img found
+  const rect = (imgEl ?? target).getBoundingClientRect()
   const cx   = rect.left + rect.width  / 2
   const cy   = rect.top  + rect.height / 2
   const rx   = rect.width  / 2
   const ry   = rect.height / 2
 
-  for (let i = 0; i < FROG_COUNT; i++) {
-    const frog = document.createElement('span')
-    frog.textContent  = FROG_EMOJI
-    frog.setAttribute('aria-hidden', 'true')
+  for (let wave = 0; wave < WAVE_COUNT; wave++) {
+    const frogsInWave = Math.round(FROG_COUNT / WAVE_COUNT)
+    for (let i = 0; i < frogsInWave; i++) {
+      // Evenly distribute angles, offset each wave slightly for fuller coverage
+      const base  = (i / frogsInWave) * 2 * Math.PI
+      const jitter = (Math.random() - 0.5) * (2 * Math.PI / frogsInWave) * 0.6
+      const waveOffset = (wave / WAVE_COUNT) * (Math.PI / frogsInWave)
+      const angle = base + jitter + waveOffset
 
-    // Evenly distributed angles with slight randomness
-    const angle    = (i / FROG_COUNT) * 2 * Math.PI + (Math.random() - 0.5) * 0.3
+      // Spawn from the exact border of the image ellipse
+      const startX = cx + Math.cos(angle) * rx
+      const startY = cy + Math.sin(angle) * ry
 
-    // Start position: on the border of the image (ellipse perimeter)
-    const startX   = cx + Math.cos(angle) * rx
-    const startY   = cy + Math.sin(angle) * ry
-
-    // End position: burst outward from the border
-    const distance = 80 + Math.random() * 120
-    const dx       = Math.cos(angle) * distance
-    const dy       = Math.sin(angle) * distance
-
-    const size  = 20 + Math.random() * 16
-    const delay = Math.random() * 100
-
-    Object.assign(frog.style, {
-      position:      'fixed',
-      left:          `${startX}px`,
-      top:           `${startY}px`,
-      fontSize:      `${size}px`,
-      lineHeight:    '1',
-      pointerEvents: 'none',
-      userSelect:    'none',
-      zIndex:        '99999',
-      transform:     'translate(-50%, -50%)',
-      '--dx':        `${dx}px`,
-      '--dy':        `${dy}px`,
-      animation:     `frog-burst ${FROG_DURATION}ms ease-out ${delay}ms forwards`,
-    })
-
-    document.body.appendChild(frog)
-    setTimeout(() => frog.remove(), FROG_DURATION + delay + 50)
+      spawnFrog(startX, startY, angle, wave)
+    }
   }
 }
 
 // ---------------------------------------------------------------------------
-// Context menu prevention — only on the hero image, not navbar logo
+// Context menu prevention — only on hero image
 // ---------------------------------------------------------------------------
 
-function onContextMenu(e: Event): void {
-  e.preventDefault()
-}
+const onContextMenu = (e: Event) => e.preventDefault()
 
 // ---------------------------------------------------------------------------
-// Hold detection — works for both mouse (desktop) and touch (mobile)
+// Hold detection
 // ---------------------------------------------------------------------------
 
 function startHold(): void {
@@ -118,25 +154,20 @@ function cancelHold(): void {
   if (holdTimer) { clearTimeout(holdTimer); holdTimer = null }
 }
 
-// ---------------------------------------------------------------------------
-// Named event handlers — required for correct removeEventListener
-// ---------------------------------------------------------------------------
-
-const onMouseDown  = (e: Event) => { if ((e as MouseEvent).button === 0) startHold() }
+const onMouseDown  = (e: MouseEvent) => { if (e.button === 0) startHold() }
 const onMouseUp    = () => cancelHold()
 const onMouseLeave = () => cancelHold()
-const onTouchStart = (e: Event) => { e.preventDefault(); startHold() }
+const onTouchStart = (e: TouchEvent) => { e.preventDefault(); startHold() }
 const onTouchEnd   = () => cancelHold()
 
 // ---------------------------------------------------------------------------
-// Attach / detach listeners to the hero image
+// Attach / detach
 // ---------------------------------------------------------------------------
 
 function attach(): void {
   detach()
   if (!active) return
 
-  // Retry loop — .VPHero .image-container may not be rendered yet
   function tryAttach(retriesLeft: number): void {
     const el = document.querySelector<HTMLElement>('.VPHero .image-container')
     if (el) {
@@ -170,10 +201,6 @@ function detach(): void {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Activate / deactivate based on current route
-// ---------------------------------------------------------------------------
-
 function activate(): void {
   active = checkIsHome()
   attach()
@@ -191,19 +218,32 @@ onUnmounted(detach)
 <template><span aria-hidden="true" /></template>
 
 <style>
-/* Frog firework keyframe — uses CSS custom properties set per-element */
 @keyframes frog-burst {
   0% {
     opacity:   1;
-    transform: translate(-50%, -50%) scale(0.4);
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
   }
-  60% {
+  15% {
     opacity:   1;
-    transform: translate(calc(-50% + var(--dx) * 0.9), calc(-50% + var(--dy) * 0.9)) scale(1.1);
+    transform: translate(-50%, -50%) rotate(calc(var(--rot) * 0.15)) scale(1.3);
+  }
+  70% {
+    opacity:   0.9;
+    transform: translate(
+        calc(-50% + var(--dx) * 0.85),
+        calc(-50% + var(--dy) * 0.85)
+      )
+      rotate(calc(var(--rot) * 0.85))
+      scale(1);
   }
   100% {
     opacity:   0;
-    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.7);
+    transform: translate(
+        calc(-50% + var(--dx)),
+        calc(-50% + var(--dy))
+      )
+      rotate(var(--rot))
+      scale(0.5);
   }
 }
 </style>
