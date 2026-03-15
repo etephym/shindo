@@ -46,16 +46,15 @@ const DARK_THEME_SCRIPT =
   `if(!localStorage.getItem(k))localStorage.setItem(k,'dark');})()`
 
 // ---------------------------------------------------------------------------
-// Head tags shared across all locales
+// Head tags — shared between locales (theme-independent)
 // ---------------------------------------------------------------------------
 
 const SHARED_HEAD = [
   ['script', {}, DARK_THEME_SCRIPT],
   ['link',   { rel: 'icon', href: `${BASE_PATH}logo.png` }],
-  ['meta',   { name: 'theme-color',    content: '#0d0d0d' }],
-  ['meta',   { property: 'og:image',   content: `${FULL_URL}logo.png` }],
-  ['meta',   { property: 'og:url',     content: FULL_URL }],
-  ['meta',   { property: 'og:type',    content: 'website' }],
+  ['meta',   { name: 'theme-color', content: '#0d0d0d' }],
+  ['meta',   { property: 'og:image', content: `${FULL_URL}logo.png` }],
+  ['meta',   { property: 'og:type',  content: 'website' }],
 ] as [string, Record<string, string>, string?][]
 
 // ---------------------------------------------------------------------------
@@ -68,93 +67,61 @@ const DEFAULT_LOGO = {
 } satisfies DefaultTheme.ThemeableImage
 
 // ---------------------------------------------------------------------------
-// Local search options — fuzzy + prefix matching
+// Search — configured once in the root locale with per-locale translations.
+// Using themeConfig.search.options.locales is the correct VitePress pattern
+// for i18n; putting search in each locale's themeConfig causes only the last
+// one to apply.
 // ---------------------------------------------------------------------------
 
-const LOCAL_SEARCH_OPTIONS = {
-  miniSearch: { searchOptions: { fuzzy: 0.2, prefix: true } },
-}
-
-// ---------------------------------------------------------------------------
-// Theme config factory — builds DefaultTheme.Config from locale-specific params
-// ---------------------------------------------------------------------------
-
-interface ThemeParams {
-  nav:                      DefaultTheme.NavItem[]
-  sidebar:                  DefaultTheme.Sidebar
-  outlineLabel:             string
-  returnToTopLabel:         string
-  sidebarMenuLabel:         string
-  darkModeSwitchLabel:      string
-  docFooter:                DefaultTheme.DocFooter
-  lastUpdatedText:          string
-  editLinkText:             string
-  searchButtonText:         string
-  searchButtonAriaLabel:    string
-  searchDisplayDetails:     string
-  searchResetButtonTitle:   string
-  searchBackButtonTitle:    string
-  searchNoResultsText:      string
-  searchFooterSelectText:   string
-  searchFooterNavigateText: string
-  searchFooterCloseText:    string
-  notFound:                 DefaultTheme.NotFoundOptions
-}
-
-function createThemeConfig(p: ThemeParams): DefaultTheme.Config {
-  return {
-    logo:                DEFAULT_LOGO,
-    siteTitle:           'Shindo Life',
-    nav:                 p.nav,
-    sidebar:             p.sidebar,
-    outline:             { level: [2, 3], label: p.outlineLabel },
-    returnToTopLabel:    p.returnToTopLabel,
-    sidebarMenuLabel:    p.sidebarMenuLabel,
-    darkModeSwitchLabel: p.darkModeSwitchLabel,
-    externalLinkIcon:    true,
-    docFooter:           p.docFooter,
-    lastUpdated: {
-      text:          p.lastUpdatedText,
-      formatOptions: { dateStyle: 'long', timeStyle: 'short' },
+const SEARCH: DefaultTheme.Config['search'] = {
+  provider: 'local',
+  options: {
+    miniSearch: { searchOptions: { fuzzy: 0.2, prefix: true } },
+    // Russian translations (root locale / default)
+    translations: {
+      button: {
+        buttonText:      'Поиск',
+        buttonAriaLabel: 'Поиск',
+      },
+      modal: {
+        displayDetails:   'Подробный список',
+        resetButtonTitle: 'Сбросить',
+        backButtonTitle:  'Закрыть',
+        noResultsText:    'Ничего не найдено по запросу',
+        footer: {
+          selectText:   'Выбрать',
+          navigateText: 'Навигация',
+          closeText:    'Закрыть',
+        },
+      },
     },
-    editLink: {
-      pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
-      text:    p.editLinkText,
-    },
-    search: {
-      provider: 'local',
-      options: {
-        ...LOCAL_SEARCH_OPTIONS,
+    // English translations via locales subkey
+    locales: {
+      en: {
         translations: {
           button: {
-            buttonText:      p.searchButtonText,
-            buttonAriaLabel: p.searchButtonAriaLabel,
+            buttonText:      'Search',
+            buttonAriaLabel: 'Search',
           },
           modal: {
-            displayDetails:   p.searchDisplayDetails,
-            resetButtonTitle: p.searchResetButtonTitle,
-            backButtonTitle:  p.searchBackButtonTitle,
-            noResultsText:    p.searchNoResultsText,
+            displayDetails:   'Show detailed list',
+            resetButtonTitle: 'Reset',
+            backButtonTitle:  'Close',
+            noResultsText:    'No results for',
             footer: {
-              selectText:   p.searchFooterSelectText,
-              navigateText: p.searchFooterNavigateText,
-              closeText:    p.searchFooterCloseText,
+              selectText:   'Select',
+              navigateText: 'Navigate',
+              closeText:    'Close',
             },
           },
         },
       },
     },
-    footer: {
-      message:   FOOTER_MESSAGE,
-      copyright: 'Shindo Life Docs © 2024–2026',
-    },
-    socialLinks: SOCIAL_LINKS,
-    notFound:    p.notFound,
-  }
+  },
 }
 
 // ---------------------------------------------------------------------------
-// Sidebar — Russian locale
+// Sidebars
 // ---------------------------------------------------------------------------
 
 const sidebarRu: DefaultTheme.Sidebar = [
@@ -207,10 +174,6 @@ const sidebarRu: DefaultTheme.Sidebar = [
     ],
   },
 ]
-
-// ---------------------------------------------------------------------------
-// Sidebar — English locale
-// ---------------------------------------------------------------------------
 
 const sidebarEn: DefaultTheme.Sidebar = [
   {
@@ -289,10 +252,14 @@ export default defineConfig({
       description:   'Гайды, тир-листы и механики Shindo Life от ETEPHYM',
       head: [
         ...SHARED_HEAD,
+        ['meta', { property: 'og:url',         content: FULL_URL }],
+        ['meta', { property: 'og:locale',      content: 'ru_RU' }],
         ['meta', { property: 'og:title',       content: 'Shindo Life Docs' }],
         ['meta', { property: 'og:description', content: 'Гайды, тир-листы и механики Shindo Life' }],
       ],
-      themeConfig: createThemeConfig({
+      themeConfig: {
+        logo:                DEFAULT_LOGO,
+        siteTitle:           'Shindo Life',
         nav: [
           { text: '🏠 Главная', link: '/' },
           {
@@ -303,23 +270,30 @@ export default defineConfig({
             ],
           },
         ],
-        sidebar:                  sidebarRu,
-        outlineLabel:             'На этой странице',
-        returnToTopLabel:         '↑ Наверх',
-        sidebarMenuLabel:         'Меню',
-        darkModeSwitchLabel:      'Тема',
-        docFooter:                { prev: '← Предыдущая', next: 'Следующая →' },
-        lastUpdatedText:          'Обновлено',
-        editLinkText:             'Редактировать на GitHub',
-        searchButtonText:         'Поиск',
-        searchButtonAriaLabel:    'Поиск',
-        searchDisplayDetails:     'Подробный список',
-        searchResetButtonTitle:   'Сбросить',
-        searchBackButtonTitle:    'Закрыть',
-        searchNoResultsText:      'Ничего не найдено по запросу',
-        searchFooterSelectText:   'Выбрать',
-        searchFooterNavigateText: 'Навигация',
-        searchFooterCloseText:    'Закрыть',
+        sidebar:              sidebarRu,
+        socialLinks:          SOCIAL_LINKS,
+        outline:              { level: [2, 3], label: 'На этой странице' },
+        returnToTopLabel:     '↑ Наверх',
+        sidebarMenuLabel:     'Меню',
+        darkModeSwitchLabel:  'Тема',
+        lightModeSwitchTitle: 'Светлая тема',
+        darkModeSwitchTitle:  'Тёмная тема',
+        langMenuLabel:        'Сменить язык',
+        externalLinkIcon:     true,
+        docFooter:            { prev: '← Предыдущая', next: 'Следующая →' },
+        lastUpdated: {
+          text:          'Обновлено',
+          formatOptions: { dateStyle: 'long', timeStyle: 'short' },
+        },
+        editLink: {
+          pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
+          text:    'Редактировать на GitHub',
+        },
+        search: SEARCH,
+        footer: {
+          message:   FOOTER_MESSAGE,
+          copyright: 'Shindo Life Docs © 2024–2026',
+        },
         notFound: {
           title:     'Страница не найдена',
           quote:     'Похоже, эта страница потерялась в тумане войны.',
@@ -327,7 +301,7 @@ export default defineConfig({
           linkText:  '← Вернуться на главную',
           code:      '404',
         },
-      }),
+      },
     },
 
     // English — served under /en/
@@ -340,11 +314,15 @@ export default defineConfig({
       description:   'Guides, tier lists and mechanics for Shindo Life by ETEPHYM',
       head: [
         ...SHARED_HEAD,
+        ['meta', { property: 'og:url',         content: `${FULL_URL}en/` }],
+        ['meta', { property: 'og:locale',      content: 'en_US' }],
         ['meta', { property: 'og:title',       content: 'Shindo Life Docs' }],
         ['meta', { property: 'og:description', content: 'Guides, tier lists and mechanics for Shindo Life' }],
         ['meta', { name: 'robots',             content: 'noindex' }],
       ],
-      themeConfig: createThemeConfig({
+      themeConfig: {
+        logo:                DEFAULT_LOGO,
+        siteTitle:           'Shindo Life',
         nav: [
           { text: '🏠 Home', link: '/en/' },
           {
@@ -355,23 +333,29 @@ export default defineConfig({
             ],
           },
         ],
-        sidebar:                  sidebarEn,
-        outlineLabel:             'On this page',
-        returnToTopLabel:         '↑ Back to top',
-        sidebarMenuLabel:         'Menu',
-        darkModeSwitchLabel:      'Theme',
-        docFooter:                { prev: '← Previous', next: 'Next →' },
-        lastUpdatedText:          'Updated',
-        editLinkText:             'Edit this page on GitHub',
-        searchButtonText:         'Search',
-        searchButtonAriaLabel:    'Search',
-        searchDisplayDetails:     'Show detailed list',
-        searchResetButtonTitle:   'Reset',
-        searchBackButtonTitle:    'Close',
-        searchNoResultsText:      'No results for',
-        searchFooterSelectText:   'Select',
-        searchFooterNavigateText: 'Navigate',
-        searchFooterCloseText:    'Close',
+        sidebar:              sidebarEn,
+        socialLinks:          SOCIAL_LINKS,
+        outline:              { level: [2, 3], label: 'On this page' },
+        returnToTopLabel:     '↑ Back to top',
+        sidebarMenuLabel:     'Menu',
+        darkModeSwitchLabel:  'Theme',
+        lightModeSwitchTitle: 'Switch to light theme',
+        darkModeSwitchTitle:  'Switch to dark theme',
+        langMenuLabel:        'Change language',
+        externalLinkIcon:     true,
+        docFooter:            { prev: '← Previous', next: 'Next →' },
+        lastUpdated: {
+          text:          'Updated',
+          formatOptions: { dateStyle: 'long', timeStyle: 'short' },
+        },
+        editLink: {
+          pattern: 'https://github.com/etephym/shindo/edit/main/docs/:path',
+          text:    'Edit this page on GitHub',
+        },
+        footer: {
+          message:   FOOTER_MESSAGE,
+          copyright: 'Shindo Life Docs © 2024–2026',
+        },
         notFound: {
           title:     'Page not found',
           quote:     'Looks like this page got lost in the fog of war.',
@@ -379,7 +363,7 @@ export default defineConfig({
           linkText:  '← Back to home',
           code:      '404',
         },
-      }),
+      },
     },
   },
 })
