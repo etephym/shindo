@@ -126,16 +126,17 @@ const SEARCH: DefaultTheme.Config['search'] = {
 
 const sidebarRu: DefaultTheme.Sidebar = [
   {
-    text: '📌 Новости',
+    text: '📌 Закреплено',
     collapsed: false,
     items: [
-      { text: 'Проблемы Shindo Life', link: '/news/shindo-issues', badge: { type: 'danger', text: 'Актуально' } },
+      { text: 'О сайте', link: '/about' },
     ],
   },
   {
     text: '⚔️ Shindo Life 2',
     collapsed: false,
     items: [
+      { text: 'Проблемы Shindo Life', link: '/news/shindo-issues', badge: { type: 'danger', text: 'Актуально' } },
       { text: 'Гайд',           link: '/shindo-life/guide', badge: { type: 'tip',     text: 'Читать' } },
       { text: 'Советы и фишки', link: '/shindo-life/tips',  badge: { type: 'warning', text: 'Важно'  } },
     ],
@@ -152,16 +153,17 @@ const sidebarRu: DefaultTheme.Sidebar = [
 
 const sidebarEn: DefaultTheme.Sidebar = [
   {
-    text: '📌 News',
+    text: '📌 Pinned',
     collapsed: false,
     items: [
-      { text: 'Shindo Life Issues', link: '/en/news/shindo-issues', badge: { type: 'danger', text: 'Active' } },
+      { text: 'About', link: '/en/about' },
     ],
   },
   {
     text: '⚔️ Shindo Life 2',
     collapsed: false,
     items: [
+      { text: 'Shindo Life Issues', link: '/en/news/shindo-issues', badge: { type: 'danger', text: 'Active' } },
       { text: 'Guide',         link: '/en/shindo-life/guide', badge: { type: 'info', text: 'Soon' } },
       { text: 'Tips & Tricks', link: '/en/shindo-life/tips',  badge: { type: 'info', text: 'Soon' } },
     ],
@@ -256,8 +258,8 @@ export default defineConfig({
           copyright: 'Shindo Life Docs © 2024–2026',
         },
         notFound: {
-          title:     'Страница не найдена',
-          quote:     'Похоже, эта страница потерялась в тумане войны.',
+          title:     '🐸 Страница не найдена',
+          quote:     'Похоже, эта страница потерялась в тумане войны. Жаба тоже не знает где она.',
           linkLabel: 'На главную',
           linkText:  '← Вернуться на главную',
           code:      '404',
@@ -325,8 +327,8 @@ export default defineConfig({
           copyright: 'Shindo Life Docs © 2024–2026',
         },
         notFound: {
-          title:     'Page not found',
-          quote:     'Looks like this page got lost in the fog of war.',
+          title:     '🐸 Page not found',
+          quote:     'Looks like this page got lost in the fog of war. The frog doesn\'t know where it is either.',
           linkLabel: 'Go to home',
           linkText:  '← Back to home',
           code:      '404',
