@@ -129,7 +129,7 @@ const sidebarRu: DefaultTheme.Sidebar = [
     text: '📌 Закреплено',
     collapsed: false,
     items: [
-      { text: 'О сайте', link: '/about' },
+      { text: 'О проекте', link: '/about' },
     ],
   },
   {

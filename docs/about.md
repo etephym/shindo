@@ -1,10 +1,10 @@
 ---
-title: О сайте
+title: О проекте
 description: О проекте Rell Games Docs
 outline: false
 ---
 
-# О сайте
+# О проекте
 
 **Rell Games Docs** — неофициальная документация по играм Rell Games, созданная сообществом.
 
