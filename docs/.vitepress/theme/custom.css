@@ -431,3 +431,11 @@ html:not(.dark) .VPNavBarSearchButton:hover {
   background:   rgba(0,0,0,0.05) !important;
   border-color: rgba(0,0,0,0.25) !important;
 }
+
+/* Mobile — no border on search button */
+@media (max-width: 768px) {
+  .VPNavBarSearchButton,
+  html:not(.dark) .VPNavBarSearchButton {
+    border-color: transparent !important;
+  }
+}
