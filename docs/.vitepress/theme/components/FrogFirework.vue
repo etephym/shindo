@@ -2,8 +2,9 @@
 import { onMounted, onUnmounted, watch } from 'vue'
 import { useData, useRoute } from 'vitepress'
 
-const HOLD_DURATION = 1500
-const FROG_EMOJI    = '🐸'
+const HOLD_DURATION  = 1500
+const FROG_EMOJI     = '🐸'
+const MOVE_THRESHOLD = 8   // px — cancel hold if pointer moves more than this
 
 const route    = useRoute()
 const { site } = useData()
@@ -12,6 +13,8 @@ let active     = false
 let holdTimer:  ReturnType<typeof setTimeout> | null = null
 let retryTimer: ReturnType<typeof setTimeout> | null = null
 let target:     HTMLElement | null = null
+let startX     = 0
+let startY     = 0
 
 function checkIsHome(): boolean {
   const base = site.value.base
@@ -163,8 +166,10 @@ const onContextMenu = (e: Event) => e.preventDefault()
 // Hold detection
 // ---------------------------------------------------------------------------
 
-function startHold(): void {
+function startHold(x: number, y: number): void {
   if (!active) return
+  startX = x
+  startY = y
   if (holdTimer) clearTimeout(holdTimer)
   holdTimer = setTimeout(() => { holdTimer = null; launchFirework() }, HOLD_DURATION)
 }
@@ -173,10 +178,19 @@ function cancelHold(): void {
   if (holdTimer) { clearTimeout(holdTimer); holdTimer = null }
 }
 
-const onMouseDown  = (e: MouseEvent) => { if (e.button === 0) startHold() }
+function checkMove(x: number, y: number): void {
+  if (!holdTimer) return
+  const dx = x - startX
+  const dy = y - startY
+  if (Math.sqrt(dx * dx + dy * dy) > MOVE_THRESHOLD) cancelHold()
+}
+
+const onMouseDown  = (e: MouseEvent) => { if (e.button === 0) startHold(e.clientX, e.clientY) }
+const onMouseMove  = (e: MouseEvent) => checkMove(e.clientX, e.clientY)
 const onMouseUp    = () => cancelHold()
 const onMouseLeave = () => cancelHold()
-const onTouchStart = (e: TouchEvent) => { startHold() }
+const onTouchStart = (e: TouchEvent) => { startHold(e.touches[0].clientX, e.touches[0].clientY) }
+const onTouchMove  = (e: TouchEvent) => checkMove(e.touches[0].clientX, e.touches[0].clientY)
 const onTouchEnd   = () => cancelHold()
 
 // ---------------------------------------------------------------------------
@@ -193,9 +207,11 @@ function attach(): void {
       target = el
       target.addEventListener('contextmenu', onContextMenu)
       target.addEventListener('mousedown',   onMouseDown)
+      target.addEventListener('mousemove',   onMouseMove)
       target.addEventListener('mouseup',     onMouseUp)
       target.addEventListener('mouseleave',  onMouseLeave)
       target.addEventListener('touchstart',  onTouchStart, { passive: true })
+      target.addEventListener('touchmove',   onTouchMove,  { passive: true })
       target.addEventListener('touchend',    onTouchEnd)
       return
     }
@@ -211,9 +227,11 @@ function detach(): void {
   if (target) {
     target.removeEventListener('contextmenu', onContextMenu)
     target.removeEventListener('mousedown',   onMouseDown)
+    target.removeEventListener('mousemove',   onMouseMove)
     target.removeEventListener('mouseup',     onMouseUp)
     target.removeEventListener('mouseleave',  onMouseLeave)
     target.removeEventListener('touchstart',  onTouchStart)
+    target.removeEventListener('touchmove',   onTouchMove)
     target.removeEventListener('touchend',    onTouchEnd)
     target = null
   }
