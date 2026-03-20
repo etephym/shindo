@@ -214,7 +214,6 @@ export default defineConfig({
         ['meta', { property: 'og:locale',      content: 'ru_RU' }],
         ['meta', { property: 'og:title',       content: 'Rell Games Docs' }],
         ['meta', { property: 'og:description', content: 'Гайды, тир-листы и механики игр Rell Games' }],
-        ['link', { rel: 'canonical',           href: FULL_URL }],
       ],
       themeConfig: {
         logo:                DEFAULT_LOGO,
@@ -286,7 +285,6 @@ export default defineConfig({
         ['meta', { property: 'og:title',       content: 'Rell Games Docs' }],
         ['meta', { property: 'og:description', content: 'Guides, tier lists and mechanics for Rell Games' }],
         ['meta', { name: 'robots',             content: 'noindex' }],
-        ['link', { rel: 'canonical',           href: `${FULL_URL}en/` }],
       ],
       themeConfig: {
         logo:                DEFAULT_LOGO,

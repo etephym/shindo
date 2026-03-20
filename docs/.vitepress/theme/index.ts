@@ -49,7 +49,7 @@ const ZoomSetup = {
     }
 
     onMounted(() => nextTick(init))
-    watch(() => route.path, () => nextTick(init))
+    watch(() => route.path.split('#')[0], () => nextTick(init))
     onUnmounted(() => zoom?.detach())
   },
   render: () => null,

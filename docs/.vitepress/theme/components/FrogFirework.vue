@@ -77,6 +77,11 @@ function resizeCanvas(): void {
   if (!canvas) return
   canvas.width  = window.innerWidth
   canvas.height = window.innerHeight
+  // Resizing a canvas resets its 2D context state — re-apply persistent properties
+  if (ctx) {
+    ctx.textAlign    = 'center'
+    ctx.textBaseline = 'middle'
+  }
 }
 
 function destroyCanvas(): void {

@@ -86,10 +86,12 @@ export function setupMusicPlayer(): void {
       const { left, top } = JSON.parse(saved) as { left: number; top: number }
       root.style.bottom = 'auto'
       root.style.right  = 'auto'
-      // Clamp to current viewport in case screen size changed since last visit
-      // Use offsetWidth/Height so clamp matches the actual widget size
-      root.style.left   = clamp(left, 0, window.innerWidth  - root.offsetWidth)  + 'px'
-      root.style.top    = clamp(top,  0, window.innerHeight - root.offsetHeight) + 'px'
+      // Clamp to current viewport in case screen size changed since last visit.
+      // offsetWidth may be 0 if layout hasn't occurred yet — fall back to 220px
+      const w = root.offsetWidth  || 220
+      const h = root.offsetHeight || 60
+      root.style.left   = clamp(left, 0, window.innerWidth  - w) + 'px'
+      root.style.top    = clamp(top,  0, window.innerHeight - h) + 'px'
     }
   } catch { /* ignore corrupt / missing storage value */ }
 
