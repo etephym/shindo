@@ -126,6 +126,8 @@ const ProgressWrapper = {
 export default {
   extends: DefaultTheme,
 
+  NotFound,
+
   Layout() {
     return h(DefaultTheme.Layout, null, {
       'doc-before': () =>
@@ -143,7 +145,6 @@ export default {
 
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
-    ctx.app.component('NotFound', NotFound)
     vitepressNprogress(ctx)
     if (typeof window !== 'undefined') {
       requestAnimationFrame(setupMusicPlayer)
