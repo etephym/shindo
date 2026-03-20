@@ -9,7 +9,7 @@
 // which language is primary — no files need to be moved.
 // ---------------------------------------------------------------------------
 
-import { PRIMARY_LOCALE, SECONDARY_LOCALE } from '../site.config'
+import { PRIMARY_LOCALE, SECONDARY_LOCALE } from '../../site.config'
 
 /** Ensures base always ends with a trailing slash. */
 export function normalizeBase(base: string): string {
