@@ -1,10 +1,10 @@
 ---
-title: Проблемы Shindo Life
+title: Проблемы Shindo
 description: Актуальные проблемы и уязвимости Shindo Life (с ~01.03.2025)
 outline: [2, 3]
 ---
 
-# Проблемы Shindo Life
+# Проблемы Shindo
 
 > Актуально с **~01.03.2025** · by lewisky
 
