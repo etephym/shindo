@@ -33,26 +33,6 @@ import NotFound        from './components/NotFound.vue'
 
 import './custom.css'
 
-// ---------------------------------------------------------------------------
-// Keyboard shortcut — '/' opens local search when not in an input field
-// ---------------------------------------------------------------------------
-
-let keydownHandler: ((e: KeyboardEvent) => void) | null = null
-
-function setupKeyboardShortcuts(): () => void {
-  keydownHandler = (e: KeyboardEvent) => {
-    if (e.key !== '/') return
-    const el = document.activeElement as HTMLElement
-    if (el?.tagName === 'INPUT' || el?.tagName === 'TEXTAREA' || el?.isContentEditable) return
-    e.preventDefault()
-    document.querySelector<HTMLButtonElement>('.VPNavBarSearchButton')?.click()
-  }
-  window.addEventListener('keydown', keydownHandler)
-  // Returns cleanup function
-  return () => {
-    if (keydownHandler) window.removeEventListener('keydown', keydownHandler)
-  }
-}
 
 // ---------------------------------------------------------------------------
 // ZoomSetup — attaches medium-zoom to doc images; re-initialises on navigation
@@ -148,7 +128,6 @@ export default {
     if (typeof window !== 'undefined') {
       vitepressNprogress(ctx)
       requestAnimationFrame(setupMusicPlayer)
-      setupKeyboardShortcuts()
     }
   },
 }

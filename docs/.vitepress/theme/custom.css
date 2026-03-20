@@ -431,11 +431,6 @@ html:not(.dark) .VPNavBarSearchButton:hover {
   }
 }
 
-/* Hide the Ctrl K shortcut hint inside the search button */
-.VPNavBarSearchButton kbd,
-.VPNavBarSearchButton .meta-key {
-  display: none !important;
-}
 
 /* ---------------------------------------------------------------------------
    Mobile nav overlay — darker, blurrier backdrop
