@@ -28,7 +28,6 @@ import CopyHeadingLink from './components/CopyHeadingLink.vue'
 import RickRoll        from './components/RickRoll.vue'
 import Copyright       from './components/Copyright.vue'
 import FrogFirework    from './components/FrogFirework.vue'
-import NotFound        from './components/NotFound.vue'
 
 import './custom.css'
 
@@ -126,7 +125,6 @@ const ProgressWrapper = {
 export default {
   extends: DefaultTheme,
 
-  NotFound,
 
   Layout() {
     return h(DefaultTheme.Layout, null, {

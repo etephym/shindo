@@ -244,6 +244,13 @@ export default defineConfig({
         darkModeSwitchTitle:  'Тёмная тема',
         langMenuLabel:        'Сменить язык',
         externalLinkIcon:     true,
+        notFound: {
+          title:     '🐸 Страница не найдена',
+          quote:     'Похоже, эта страница потерялась в тумане войны. Жаба тоже не знает где она.',
+          linkLabel: 'На главную',
+          linkText:  '← Вернуться на главную',
+          code:      '404',
+        },
         docFooter:            { prev: '← Предыдущая', next: 'Следующая →' },
         lastUpdated: {
           text:          'Обновлено',
@@ -307,6 +314,13 @@ export default defineConfig({
         darkModeSwitchTitle:  'Switch to dark theme',
         langMenuLabel:        'Change language',
         externalLinkIcon:     true,
+        notFound: {
+          title:     '🐸 Page not found',
+          quote:     "Looks like this page got lost in the fog of war. The frog doesn't know where it is either.",
+          linkLabel: 'Go to home',
+          linkText:  '← Back to home',
+          code:      '404',
+        },
         docFooter:            { prev: '← Previous', next: 'Next →' },
         lastUpdated: {
           text:          'Updated',
