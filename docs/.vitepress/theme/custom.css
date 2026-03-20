@@ -456,50 +456,6 @@ html:not(.dark) .VPNavBarSearchButton:hover {
 html:not(.dark) .VPNavScreen { background: rgba(255,255,255,0.88) !important; }
 
 /* ---------------------------------------------------------------------------
-   404 page — custom styling
-   --------------------------------------------------------------------------- */
-
-.NotFound {
-  text-align: center;
-}
-
-.NotFound .code {
-  font-size:   clamp(80px, 20vw, 160px) !important;
-  background:  linear-gradient(270deg, #ff6b6b, #54a0ff, #ff9ff3);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation:   rainbow 4s ease infinite;
-  line-height: 1 !important;
-}
-
-.NotFound .title {
-  font-size: 24px !important;
-  margin:    16px 0 8px !important;
-}
-
-.NotFound .quote {
-  font-size: 15px !important;
-  opacity:   0.7 !important;
-}
-
-.NotFound .link {
-  display:       inline-block;
-  margin-top:    24px;
-  padding:       10px 24px;
-  background:    rgba(84,160,255,0.12);
-  border:        1px solid rgba(84,160,255,0.25);
-  border-radius: 8px;
-  transition:    background 0.2s, border-color 0.2s;
-}
-
-.NotFound .link:hover {
-  background:   rgba(84,160,255,0.22);
-  border-color: rgba(84,160,255,0.45);
-}
-
-/* ---------------------------------------------------------------------------
    Keyboard shortcut hint in search button
    --------------------------------------------------------------------------- */
 

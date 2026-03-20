@@ -28,6 +28,7 @@ import CopyHeadingLink from './components/CopyHeadingLink.vue'
 import RickRoll        from './components/RickRoll.vue'
 import Copyright       from './components/Copyright.vue'
 import FrogFirework    from './components/FrogFirework.vue'
+import NotFound        from './components/NotFound.vue'
 
 import './custom.css'
 
@@ -142,6 +143,7 @@ export default {
 
   enhanceApp(ctx: EnhanceAppContext) {
     DefaultTheme.enhanceApp(ctx)
+    ctx.app.component('NotFound', NotFound)
     vitepressNprogress(ctx)
     if (typeof window !== 'undefined') {
       requestAnimationFrame(setupMusicPlayer)
